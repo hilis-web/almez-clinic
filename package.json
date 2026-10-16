@@ -1,0 +1,19 @@
+{
+  "name": "almez-clinic",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Almez clinic platform rebuilt with Next.js, TypeScript, Node.js and PostgreSQL",
+  "workspaces": [
+    "apps/web",
+    "apps/admin",
+    "apps/api"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:admin": "npm run dev --workspace=apps/admin",
+    "dev:api": "npm run dev --workspace=apps/api"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
