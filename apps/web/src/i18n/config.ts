@@ -15,7 +15,7 @@ if (!i18n.isInitialized) {
   void i18n.use(initReactI18next).init({
     resources,
     lng: "es",
-    initImmediate: false,
+    initAsync: false,
     fallbackLng: "es",
     supportedLngs: ["es", "en"],
     load: "languageOnly",
