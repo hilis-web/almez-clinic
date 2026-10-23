@@ -1,0 +1,42 @@
+{
+  "brand": {
+    "name": "Almez Clinic",
+    "adminSubtitle": "Admin dashboard",
+    "footer": "Clinic administration"
+  },
+  "navigation": {
+    "section": "MAIN MENU",
+    "dashboard": "Dashboard",
+    "consultations": "Consultations",
+    "doctors": "Doctors",
+    "patients": "Patients",
+    "settings": "Settings"
+  },
+  "header": {
+    "title": "Admin dashboard",
+    "searchPlaceholder": "Search...",
+    "notifications": "Notifications",
+    "language": "Language"
+  },
+  "dashboard": {
+    "welcome": "Welcome to Almez Clinic",
+    "overview": "Overview",
+    "overviewDescription": "Monitor and manage the clinic's services from your dashboard.",
+    "statistics": "Statistics",
+    "consultations": "Consultations",
+    "consultationsDescription": "Total consultation requests",
+    "doctors": "Doctors",
+    "doctorsDescription": "Registered doctors",
+    "patients": "Patients",
+    "patientsDescription": "Registered patients",
+    "clients": "Clinics",
+    "clientsDescription": "Registered clinics",
+    "recentActivity": "Recent activity",
+    "activityDescription": "Recent consultations and activities will appear here once the dashboard is connected to the database.",
+    "pending": "Awaiting data connection"
+  },
+  "languages": {
+    "spanish": "Español",
+    "english": "English"
+  }
+}

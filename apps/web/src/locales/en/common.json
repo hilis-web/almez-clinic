@@ -1,0 +1,117 @@
+{
+  "language": {
+    "label": "Language",
+    "spanish": "Spanish",
+    "english": "English"
+  },
+  "navigation": {
+    "home": "Home",
+    "consultation": "Request a consultation",
+    "about": "About the clinic",
+    "team": "Our team",
+    "pathologies": "Pathologies",
+    "treatments": "Treatments",
+    "contact": "Contact",
+    "bookAppointment": "Book an appointment"
+  },
+  "consultation": {
+    "title": "Request a consultation",
+    "description": "Complete the form and our team will contact you.",
+    "fullName": "Full name",
+    "email": "Email address",
+    "phone": "Phone",
+    "subject": "Consultation subject",
+    "message": "Consultation details",
+    "submit": "Send request",
+    "submitting": "Sending request...",
+    "success": "Your consultation request was sent successfully.",
+    "error": "Unable to send your request. Please try again.",
+    "required": "This field is required",
+    "captchaUnavailable": "Verification is unavailable. Please try again.",
+
+    "type": "Consultation type",
+    "typePlaceholder": "Select consultation type",
+    "namePlaceholder": "Enter your full name",
+    "emailPlaceholder": "Enter your email address",
+    "phonePlaceholder": "Enter your phone number",
+    "additionalInfo": "Additional information",
+    "additionalInfoPlaceholder": "Enter any additional information (optional)",
+    "types": {
+      "newPatient": "New patient consultation",
+      "secondOpinion": "Second medical opinion",
+      "followUp": "Follow-up consultation",
+      "online": "Online / video consultation",
+      "postSurgery": "Post-operative consultation",
+      "other": "Other"
+    },
+    "minimize": "Minimize form",
+    "expand": "Expand form",
+    "recaptchaNotice": "This form is protected by Google reCAPTCHA."
+  },
+
+  "header": {
+    "tagline": "We take care of your back, we improve your life",
+    "specialty": "Orthopaedic and spine surgery",
+    "doctorName": "Dr Aaron Hilis",
+    "credentials": "MB ChB BSc, MA, FRCS, PhD",
+    "qualification": "Master's degree in sports medicine",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone"
+  },
+
+  "about": {
+    "eyebrow": "About Almez",
+    "title": "We care for your health and wellbeing",
+    "description": "We provide specialised medical care with a patient-centred approach, helping you understand your options and make informed decisions about your health.",
+    "approach": "Our goal is to provide attentive, professional care tailored to your needs.",
+    "cta": "Request a consultation",
+    "visualCaption": "Specialised medical care"
+  },
+  "sponsors": {
+    "ariaLabel": "Our sponsors' logos"
+  },
+
+  "freeConsultation": {
+    "label": "FREE CONSULTATION",
+    "title": "Book a consultation of",
+    "duration": "15 minutes",
+    "description": "Speak with a spine surgery specialist and receive initial personalized guidance.",
+    "noCommitment": "No commitment",
+    "minutes": "15 minutes",
+    "response": "Response within 24 hours",
+    "button": "Request a consultation"
+  },
+
+  "footer": {
+    "description": "At Almez, we provide compassionate medical care and services designed to support your health and well-being.",
+    "navigationLabel": "Site navigation",
+    "linksTitle": "Quick links",
+    "links": {
+      "home": "Home",
+      "about": "About us",
+      "services": "Specialties",
+      "consultation": "Free consultation"
+    },
+    "contactTitle": "Need help?",
+    "contactDescription": "We are here to help. Request a consultation and our team will guide you.",
+    "contactButton": "Request a consultation",
+    "copyright": "All rights reserved.",
+    "tagline": "Caring for you, caring for your health."
+  },
+
+  "cookies": {
+    "title": "Cookie preferences",
+    "description": "We use necessary cookies to make this website work. You can choose whether to allow optional cookies.",
+    "necessary": "Necessary cookies",
+    "necessaryDescription": "Required for the basic operation of this website.",
+    "analytics": "Analytics cookies",
+    "analyticsDescription": "Help us understand how the website is used.",
+    "marketing": "Marketing cookies",
+    "marketingDescription": "Allow advertising and personalized content services.",
+    "accept": "Accept all",
+    "reject": "Reject all",
+    "configure": "Configure",
+    "save": "Save preferences",
+    "closeSettings": "Close settings"
+  }
+}

@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+:root {
+  /* Almez Clinic — Brand Colors */
+  --primary: #1b3b36;
+  --primary-dark: #173d36;
+  --secondary: #a89b90;
+  --accent: #9fd3af;
+  --green: #496e5a;
+
+  /* Backgrounds */
+  --background: #f8f9fa;
+  --surface: #ffffff;
+  --surface-muted: #f1f5f0;
+
+  /* Text */
+  --foreground: #212529;
+  --text-muted: #758078;
+  --border: #e3e8e3;
+
+  /* Effects */
+  --shadow-sm: 0 4px 18px rgba(27, 59, 54, 0.04);
+  --shadow-md: 0 8px 25px rgba(27, 59, 54, 0.1);
+  --radius-card: 16px;
+
+  /* Fonts */
+  --font-body: var(--font-source-sans), sans-serif;
+  --font-heading: var(--font-cormorant), serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  font-size: 17px;
+  line-height: 1.7;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+h4,
+h5,
+h6 {
+  font-weight: 600;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+p,
+label,
+input,
+select,
+textarea,
+button {
+  font-size: 1rem;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--green);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--primary);
+  font-family: var(--font-heading);
+  line-height: 1.25;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}

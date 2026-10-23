@@ -1,0 +1,42 @@
+{
+  "brand": {
+    "name": "Almez Clinic",
+    "adminSubtitle": "Panel de administración",
+    "footer": "Administración de clínicas"
+  },
+  "navigation": {
+    "section": "MENÚ PRINCIPAL",
+    "dashboard": "Inicio",
+    "consultations": "Consultas",
+    "doctors": "Médicos",
+    "patients": "Pacientes",
+    "settings": "Configuración"
+  },
+  "header": {
+    "title": "Panel de administración",
+    "searchPlaceholder": "Buscar...",
+    "notifications": "Notificaciones",
+    "language": "Idioma"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido a Almez Clinic",
+    "overview": "Resumen general",
+    "overviewDescription": "Desde aquí podrás supervisar y gestionar los servicios de la clínica.",
+    "statistics": "Estadísticas",
+    "consultations": "Consultas",
+    "consultationsDescription": "Total de solicitudes de consulta",
+    "doctors": "Médicos",
+    "doctorsDescription": "Médicos registrados",
+    "patients": "Pacientes",
+    "patientsDescription": "Pacientes registrados",
+    "clients": "Clínicas",
+    "clientsDescription": "Clínicas registradas",
+    "recentActivity": "Actividad reciente",
+    "activityDescription": "Aquí aparecerán las consultas y actividades más recientes cuando conectemos el panel con la base de datos.",
+    "pending": "Pendiente de conectar con los datos"
+  },
+  "languages": {
+    "spanish": "Español",
+    "english": "English"
+  }
+}

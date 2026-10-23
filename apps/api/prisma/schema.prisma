@@ -1,0 +1,167 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  RECEPTIONIST
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique @db.VarChar(254)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  firstName    String   @map("first_name") @db.VarChar(100)
+  lastName     String   @map("last_name") @db.VarChar(100)
+  role         UserRole @default(RECEPTIONIST)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+assignedConsultations ConsultationRequest[]
+activities ConsultationActivity[]
+auditLogs AuditLog[]
+  @@index([role, isActive])
+  @@map("users")
+}
+
+
+enum ConsultationStatus {
+  NEW
+  IN_PROGRESS
+  CONTACTED
+  COMPLETED
+  CANCELLED
+}
+
+
+model ConsultationRequest {
+  id               String                 @id @default(uuid()) @db.Uuid
+  fullName         String                 @map("full_name") @db.VarChar(200)
+  email            String                 @db.VarChar(254)
+  phone            String?                 @db.VarChar(30)
+  subject          String?                @db.VarChar(200)
+  message          String?                @db.Text
+  consultationType String                 @map("consultation_type") @db.VarChar(50)
+  additionalInfo   String?                @map("additional_info") @db.Text
+  status           ConsultationStatus     @default(NEW)
+  assignedToId     String?                @map("assigned_to_id") @db.Uuid
+  assignedTo       User?                  @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
+  createdAt        DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime               @updatedAt @map("updated_at") @db.Timestamptz(3)
+  activities       ConsultationActivity[]
+
+  @@index([status, createdAt])
+  @@index([assignedToId])
+  @@map("consultation_requests")
+}
+
+
+model ConsultationActivity {
+  id            String   @id @default(uuid()) @db.Uuid
+  consultationId String  @map("consultation_id") @db.Uuid
+  actorId       String?  @map("actor_id") @db.Uuid
+  action        String   @db.VarChar(100)
+  details       Json?
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  consultation ConsultationRequest @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+  actor        User?                @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([consultationId, createdAt])
+  @@index([actorId, createdAt])
+  @@map("consultation_activities")
+}
+
+
+model EmailVerificationToken {
+  id         String    @id @default(uuid()) @db.Uuid
+  email      String    @db.VarChar(254)
+  tokenHash  String    @unique @map("token_hash") @db.VarChar(255)
+  expiresAt  DateTime  @map("expires_at") @db.Timestamptz(3)
+  usedAt     DateTime? @map("used_at") @db.Timestamptz(3)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@index([email, expiresAt])
+  @@map("email_verification_tokens")
+}
+
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  actorId    String?  @map("actor_id") @db.Uuid
+  action     String   @db.VarChar(100)
+  entityType String   @map("entity_type") @db.VarChar(100)
+  entityId   String?  @map("entity_id") @db.VarChar(100)
+  details    Json?
+  ipAddress  String?  @map("ip_address") @db.VarChar(45)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId, createdAt])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+enum SectionContentStatus {
+  PUBLISHED
+  UNPUBLISHED
+}
+
+model Section {
+  id          String               @id @default(uuid()) @db.Uuid
+  title       Json
+  description Json
+  imageUrl    String?              @map("image_url") @db.Text
+  status      SectionContentStatus @default(UNPUBLISHED)
+  sortOrder   Int                  @default(0) @map("sort_order")
+  categories  SectionCategory[]
+  createdAt   DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([status, sortOrder])
+  @@map("sections")
+}
+
+model SectionCategory {
+  id          String               @id @default(uuid()) @db.Uuid
+  sectionId   String               @map("section_id") @db.Uuid
+  title       Json
+  description Json
+  imageUrl    String?              @map("image_url") @db.Text
+  toolTip     Json?                @map("tool_tip")
+  status      SectionContentStatus @default(UNPUBLISHED)
+  sortOrder   Int                  @default(0) @map("sort_order")
+  section     Section              @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  items       SectionItem[]
+  createdAt   DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([sectionId, status, sortOrder])
+  @@map("section_categories")
+}
+
+model SectionItem {
+  id          String               @id @default(uuid()) @db.Uuid
+  categoryId  String               @map("category_id") @db.Uuid
+  title       Json
+  description Json
+  content     Json
+  imageUrl    String?              @map("image_url") @db.Text
+  toolTip     Json?                @map("tool_tip")
+  status      SectionContentStatus @default(UNPUBLISHED)
+  sortOrder   Int                  @default(0) @map("sort_order")
+  category    SectionCategory      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([categoryId, status, sortOrder])
+  @@map("section_items")
+}

@@ -1,0 +1,115 @@
+{
+  "language": {
+    "label": "Idioma",
+    "spanish": "Español",
+    "english": "Inglés"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "consultation": "Solicitar consulta",
+    "about": "Sobre la clínica",
+    "team": "Nuestro equipo",
+    "pathologies": "Patologías",
+    "treatments": "Tratamientos",
+    "contact": "Contacto",
+    "bookAppointment": "Reservar una cita"
+  },
+  "consultation": {
+    "title": "Solicitar una consulta",
+    "description": "Completa el formulario y nuestro equipo se pondrá en contacto contigo.",
+    "fullName": "Nombre completo",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "subject": "Asunto de la consulta",
+    "message": "Detalles de la consulta",
+    "submit": "Enviar solicitud",
+    "submitting": "Enviando solicitud...",
+    "success": "Tu solicitud se ha enviado correctamente.",
+    "error": "No se ha podido enviar la solicitud. Inténtalo de nuevo.",
+    "required": "Campo obligatorio",
+    "captchaUnavailable": "La verificación no está disponible. Inténtalo de nuevo.",
+
+    "type": "Tipo de consulta",
+    "typePlaceholder": "Selecciona el tipo de consulta",
+    "namePlaceholder": "Introduce tu nombre completo",
+    "emailPlaceholder": "Introduce tu correo electrónico",
+    "phonePlaceholder": "Introduce tu número de teléfono",
+    "additionalInfo": "Información adicional",
+    "additionalInfoPlaceholder": "Escribe cualquier información adicional (opcional)",
+    "types": {
+      "newPatient": "Consulta para nuevos pacientes",
+      "secondOpinion": "Segunda opinión médica",
+      "followUp": "Consulta de seguimiento",
+      "online": "Consulta en línea / por videollamada",
+      "postSurgery": "Consulta posoperatoria",
+      "other": "Otra"
+    },
+    "minimize": "Minimizar formulario",
+    "expand": "Ampliar formulario",
+    "recaptchaNotice": "Este formulario está protegido por Google reCAPTCHA."
+  },
+  "header": {
+    "tagline": "Cuidamos tu espalda, mejoramos tu vida",
+    "specialty": "Cirugía ortopédica y de columna vertebral",
+    "doctorName": "Dr. Aaron Hilis",
+    "credentials": "MB ChB BSc, MA, FRCS, PhD",
+    "qualification": "Máster en medicina deportiva",
+    "emailLabel": "Correo electrónico",
+    "phoneLabel": "Teléfono"
+  },
+
+  "about": {
+    "eyebrow": "Sobre Almez",
+    "title": "Cuidamos de tu salud y bienestar",
+    "description": "Ofrecemos atención médica especializada con un enfoque centrado en cada paciente, para ayudarte a comprender tus opciones y tomar decisiones informadas sobre tu salud.",
+    "approach": "Nuestro objetivo es ofrecer una atención cercana, profesional y adaptada a tus necesidades.",
+    "cta": "Solicitar una consulta",
+    "visualCaption": "Atención médica especializada"
+  },
+  "sponsors": {
+    "ariaLabel": "Logotipos de nuestros patrocinadores"
+  },
+
+  "freeConsultation": {
+    "label": "CONSULTA GRATUITA",
+    "title": "Reserva una consulta de",
+    "duration": "15 minutos",
+    "description": "Habla con un especialista en cirugía de columna y recibe una primera orientación personalizada.",
+    "noCommitment": "Sin compromiso",
+    "minutes": "15 minutos",
+    "response": "Respuesta en menos de 24 h",
+    "button": "Solicitar consulta"
+  },
+
+  "footer": {
+    "description": "En Almez te acompañamos con atención médica cercana y servicios diseñados para cuidar de tu salud y bienestar.",
+    "navigationLabel": "Navegación del sitio",
+    "linksTitle": "Enlaces rápidos",
+    "links": {
+      "home": "Inicio",
+      "about": "Sobre nosotros",
+      "services": "Especialidades",
+      "consultation": "Consulta gratuita"
+    },
+    "contactTitle": "¿Necesitas ayuda?",
+    "contactDescription": "Estamos aquí para ayudarte. Solicita una consulta y nuestro equipo te orientará.",
+    "contactButton": "Solicitar una consulta",
+    "copyright": "Todos los derechos reservados.",
+    "tagline": "Cuidamos de ti, cuidamos de tu salud."
+  },
+  "cookies": {
+    "title": "Preferencias de cookies",
+    "description": "Utilizamos cookies necesarias para el funcionamiento del sitio. Puedes elegir si permites las cookies opcionales.",
+    "necessary": "Cookies necesarias",
+    "necessaryDescription": "Necesarias para el funcionamiento básico del sitio.",
+    "analytics": "Cookies analíticas",
+    "analyticsDescription": "Ayudan a comprender cómo se utiliza el sitio.",
+    "marketing": "Cookies de marketing",
+    "marketingDescription": "Permiten servicios de publicidad y contenido personalizado.",
+    "accept": "Aceptar todas",
+    "reject": "Rechazar todas",
+    "configure": "Configurar",
+    "save": "Guardar preferencias",
+    "closeSettings": "Cerrar configuración"
+  }
+}
