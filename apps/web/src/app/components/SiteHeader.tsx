@@ -222,11 +222,11 @@ export default function SiteHeader() {
             </Link>
 
             <a
-              href="/#about"
+              href="/#team"
               className="almez-header__nav-link"
               onClick={closeMenu}
             >
-              {translate("navigation.about", "Sobre la clínica")}
+              {translate("navigation.team", "Nuestro equipo")}
             </a>
 
             {/* Dynamic sections from the API */}
@@ -374,21 +374,6 @@ export default function SiteHeader() {
               );
             })}
 
-            <a
-              href="/#treatments"
-              className="almez-header__nav-link"
-              onClick={closeMenu}
-            >
-              {translate("navigation.treatments", "Tratamientos")}
-            </a>
-
-            <a
-              href="/#team"
-              className="almez-header__nav-link"
-              onClick={closeMenu}
-            >
-              {translate("navigation.team", "Nuestro equipo")}
-            </a>
             {/* Contact is fixed and always last */}
             <a
               href="/#contact"

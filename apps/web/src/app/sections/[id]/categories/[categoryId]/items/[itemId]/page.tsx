@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import i18n from "../../../../../../../i18n/config";
-import SiteHeader from "../../../../../../components/SiteHeader";
+import styles from "../../../../../../components/sections/SectionItemContent.module.css";
 
 type LocalizedText = {
   ar?: string;
@@ -136,25 +136,24 @@ function ItemPageContent() {
               {t("common.notFound", "Contenido no encontrado.")}
             </p>
           ) : (
-            <article className="almez-item-detail">
+            <article className={styles["almez-item-detail"]}>
               {item.imageUrl && (
                 <img
                   src={item.imageUrl}
                   alt={title}
-                  className="mb-6 max-h-[420px] w-full rounded-xl object-cover"
+                  className={styles["almez-item-detail__image"]}
                 />
               )}
 
-              <h1 className="mb-4 text-3xl font-bold">{title}</h1>
-
+              <h1 className={styles["almez-item-detail__title"]}>{title}</h1>
               {description && (
-                <p className="mb-8 whitespace-pre-line text-gray-700">
+                <p className={styles["almez-item-detail__description"]}>
                   {description}
                 </p>
               )}
 
               <div
-                className="almez-item-detail__content"
+                className={styles["almez-item-detail__content"]}
                 dangerouslySetInnerHTML={{ __html: content }}
               />
             </article>
