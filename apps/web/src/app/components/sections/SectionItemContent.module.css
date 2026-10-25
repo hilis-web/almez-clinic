@@ -14,6 +14,7 @@
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
   line-height: 1.8;
   overflow-wrap: anywhere;
+  box-sizing: border-box;
 }
 
 /* Main title */
@@ -34,8 +35,9 @@
   white-space: pre-line;
 }
 
-/* Content from the database */
+/* Database HTML content */
 .almez-item-detail__content {
+  min-width: 0;
   color: var(--article-text);
   font-size: 1rem;
   line-height: 1.85;
@@ -51,6 +53,10 @@
   color: var(--article-primary);
   font-weight: 700;
   line-height: 1.4;
+}
+
+.almez-item-detail__content h1 {
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
 }
 
 .almez-item-detail__content h2 {
@@ -92,8 +98,8 @@
   color: var(--article-accent);
 }
 
-.almez-item-detail__content img,
-.almez-item-detail__image {
+.almez-item-detail__image,
+.almez-item-detail__content img {
   display: block;
   max-width: 100%;
   height: auto;
@@ -147,7 +153,94 @@
   max-width: 100%;
 }
 
-@media (max-width: 768px) {
+/*
+ * Legacy HTML classes from the database.
+ * :global() is intentionally avoided here.
+ * These selectors are local CSS Module classes and are
+ * not intended to target the unmodified database classes.
+ */
+
+/* Article layout */
+.almez-item-detail__content .container {
+  width: 100%;
+  max-width: 1140px;
+  margin-inline: auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.almez-item-detail__content .row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+}
+
+.almez-item-detail__content .col-lg-4 {
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  padding: 0;
+}
+
+.almez-item-detail__content .article-card {
+  height: 100%;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(27, 59, 54, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(27, 59, 54, 0.06);
+  box-sizing: border-box;
+}
+
+.almez-item-detail__content .main-title {
+  margin: 0 0 20px;
+  color: var(--article-primary);
+  font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.almez-item-detail__content .section-title {
+  margin: 24px 0 12px;
+  color: var(--article-primary);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.almez-item-detail__content .feature-box {
+  margin-top: 24px;
+  padding: 20px;
+  background: #f2f6f3;
+  border-inline-start: 4px solid var(--article-accent);
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.almez-item-detail__content .article-image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 20px auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .almez-item-detail__content .row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .almez-item-detail__content .container {
+    padding: 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
   .almez-item-detail {
     padding: 20px 16px;
     border-radius: 12px;
@@ -155,6 +248,19 @@
 
   .almez-item-detail__content {
     font-size: 0.97rem;
+  }
+
+  .almez-item-detail__content .container {
+    padding: 12px;
+  }
+
+  .almez-item-detail__content .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .almez-item-detail__content .article-card {
+    padding: 18px;
   }
 
   .almez-item-detail__content img {

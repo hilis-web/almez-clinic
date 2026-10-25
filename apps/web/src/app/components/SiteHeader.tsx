@@ -247,39 +247,41 @@ export default function SiteHeader() {
                   onMouseEnter={() => setOpenSectionId(section.id)}
                 >
                   <div className="almez-mega__trigger-group">
-                    <Link
-                      href={`/sections/${section.id}`}
-                      className="almez-header__nav-link almez-mega__section-link"
-                      onClick={closeMenu}
-                    >
-                      <span>{sectionTitle}</span>
-                    </Link>
-
-                    <button
-                      type="button"
-                      className="almez-header__nav-link almez-mega__trigger"
-                      aria-label={`${sectionTitle} submenu`}
-                      aria-expanded={isOpen}
-                      aria-controls={`almez-mega-${section.id}`}
-                      onClick={() =>
-                        setOpenSectionId(isOpen ? null : section.id)
-                      }
-                    >
-                      <svg
-                        className="almez-mega__chevron"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        aria-hidden="true"
+                    <div className="almez-mega__item">
+                      <Link
+                        href={`/sections/${section.id}`}
+                        className="almez-header__nav-link almez-mega__section-link"
+                        onClick={closeMenu}
                       >
-                        <path
-                          d="m5 7.5 5 5 5-5"
-                          stroke="currentColor"
-                          strokeWidth="1.7"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </button>
+                        <span>{sectionTitle}</span>
+                      </Link>
+
+                      <button
+                        type="button"
+                        className="almez-header__nav-link almez-mega__trigger"
+                        aria-label={`${sectionTitle} submenu`}
+                        aria-expanded={isOpen}
+                        aria-controls={`almez-mega-${section.id}`}
+                        onClick={() =>
+                          setOpenSectionId(isOpen ? null : section.id)
+                        }
+                      >
+                        <svg
+                          className="almez-mega__chevron"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="m5 7.5 5 5 5-5"
+                            stroke="currentColor"
+                            strokeWidth="1.7"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
 
                   {isOpen && (
@@ -324,7 +326,7 @@ export default function SiteHeader() {
                               .filter((item) => item.status !== "UNPUBLISHED")
                               .sort((a, b) => a.sortOrder - b.sortOrder);
 
-                            const visibleItems = items.slice(0, 7);
+                            const visibleItems = items.slice(0, 5);
 
                             return (
                               <div
@@ -353,7 +355,7 @@ export default function SiteHeader() {
                                   ))}
                                 </ul>
 
-                                {items.length > 7 && (
+                                {items.length > 5 && (
                                   <Link
                                     href={`/sections/${section.id}/categories/${category.id}`}
                                     className="almez-mega__more"

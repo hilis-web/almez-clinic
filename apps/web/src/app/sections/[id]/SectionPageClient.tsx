@@ -16,6 +16,7 @@ interface SectionItem {
   description?: LocalizedText | string | null;
   imageUrl?: string | null;
   sortOrder: number;
+  status?: string;
 }
 
 interface SectionCategory {
@@ -62,6 +63,9 @@ export default function SectionPageClient() {
   const [section, setSection] = useState<Section | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [hoveredCategoryId, setHoveredCategoryId] = useState<string | null>(
+    null,
+  );
 
   const sectionId = params.id;
 
@@ -162,50 +166,32 @@ export default function SectionPageClient() {
 
   return (
     <main className="almez-section-page">
-      <div className="almez-section-page__container">
-        <button
-          type="button"
-          className="almez-section-page__back"
-          onClick={() => router.push("/")}
-        >
-          <span aria-hidden="true">←</span>
-          {t("sections.backHome", "Back to home")}
-        </button>
+      {/* Sticky section title and description */}
+      <div className="almez-section-sticky-bar">
+        <div className="almez-section-sticky-bar__inner">
+          <button
+            type="button"
+            className="almez-section-sticky-bar__back"
+            onClick={() => router.push("/")}
+          >
+            <span aria-hidden="true">←</span>
+            {t("sections.backHome", "Back to home")}
+          </button>
 
-        <header className="almez-section-page__hero">
-          {section.imageUrl && (
-            <img
-              className="almez-section-page__hero-image"
-              src={section.imageUrl}
-              alt=""
-            />
-          )}
-
-          <div className="almez-section-page__hero-content">
-            <span className="almez-section-page__eyebrow">
-              {t("sections.eyebrow", "Explore Almez")}
-            </span>
-
-            <h1 className="almez-section-page__title">{title}</h1>
+          <div className="almez-section-sticky-bar__text">
+            <h1 className="almez-section-sticky-bar__title">{title}</h1>
 
             {description && (
-              <p className="almez-section-page__description">{description}</p>
+              <p className="almez-section-sticky-bar__description">
+                {description}
+              </p>
             )}
           </div>
-        </header>
+        </div>
+      </div>
 
+      <div className="almez-section-page__container">
         <section className="almez-section-page__categories">
-          <div className="almez-section-page__section-heading">
-            <h2>{t("sections.categoriesTitle", "Explore categories")}</h2>
-
-            <p>
-              {t(
-                "sections.categoriesDescription",
-                "Choose a category to discover its content.",
-              )}
-            </p>
-          </div>
-
           {section.categories.length === 0 ? (
             <p className="almez-section-page__empty">
               {t(
@@ -226,16 +212,51 @@ export default function SectionPageClient() {
                   language,
                 );
 
+                const visibleItems = [...(category.items || [])]
+                  .filter((item) => item.status !== "UNPUBLISHED")
+                  .sort((a, b) => a.sortOrder - b.sortOrder)
+                  .slice(0, 5);
+
+                const isHovered = hoveredCategoryId === category.id;
+
                 return (
-                  <button
+                  <div
                     key={category.id}
-                    type="button"
-                    className="almez-category-card"
+                    className={`almez-category-card ${
+                      isHovered ? "is-hovered" : ""
+                    }`}
+                    role="button"
+                    tabIndex={0}
+                    onMouseEnter={() => setHoveredCategoryId(category.id)}
+                    onMouseLeave={() => setHoveredCategoryId(null)}
+                    onFocus={() => setHoveredCategoryId(category.id)}
+                    onBlur={(event) => {
+                      if (
+                        !event.currentTarget.contains(
+                          event.relatedTarget as Node | null,
+                        )
+                      ) {
+                        setHoveredCategoryId(null);
+                      }
+                    }}
                     onClick={() =>
                       router.push(
                         `/sections/${section.id}/categories/${category.id}`,
                       )
                     }
+                    onKeyDown={(event) => {
+                      if (event.target !== event.currentTarget) {
+                        return;
+                      }
+
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+
+                        router.push(
+                          `/sections/${section.id}/categories/${category.id}`,
+                        );
+                      }
+                    }}
                   >
                     {category.imageUrl ? (
                       <img
@@ -268,7 +289,50 @@ export default function SectionPageClient() {
                         {t("sections.explore", "Explore category")} →
                       </span>
                     </span>
-                  </button>
+
+                    {/* Dropdown shown on hover or keyboard focus */}
+                    <div
+                      className="almez-category-card__dropdown"
+                      aria-hidden={!isHovered}
+                    >
+                      <p className="almez-category-card__dropdown-heading">
+                        {categoryTitle}
+                      </p>
+
+                      {visibleItems.length > 0 ? (
+                        <ul className="almez-category-card__dropdown-list">
+                          {visibleItems.map((item) => (
+                            <li key={item.id}>
+                              <a
+                                href={`/sections/${section.id}/categories/${category.id}/items/${item.id}`}
+                                className="almez-category-card__dropdown-link"
+                                tabIndex={isHovered ? 0 : -1}
+                                onClick={(event) => event.stopPropagation()}
+                              >
+                                <span>
+                                  {getLocalizedText(item.title, language)}
+                                </span>
+                                <span aria-hidden="true">→</span>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="almez-category-card__dropdown-empty">
+                          {t("sections.noItems", "No items available yet.")}
+                        </p>
+                      )}
+
+                      <a
+                        href={`/sections/${section.id}/categories/${category.id}`}
+                        className="almez-category-card__dropdown-all"
+                        tabIndex={isHovered ? 0 : -1}
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        {t("sections.explore", "Explore category")} →
+                      </a>
+                    </div>
+                  </div>
                 );
               })}
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useState, type ReactNode } from "react";
 import i18n from "../../i18n/config";
 
 interface I18nProviderProps {
@@ -44,9 +44,9 @@ export default function I18nProvider({ children }: I18nProviderProps) {
     };
   }, []);
 
-  if (!isLanguageReady) {
-    return null;
-  }
-
-  return <>{children}</>;
+  return (
+    <Suspense fallback={<div aria-busy="true" />}>
+      {isLanguageReady ? children : <div aria-busy="true" />}
+    </Suspense>
+  );
 }

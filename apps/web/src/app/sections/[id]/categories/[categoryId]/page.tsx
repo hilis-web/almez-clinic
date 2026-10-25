@@ -63,6 +63,7 @@ function CategoryPageContent() {
   const [category, setCategory] = useState<SectionCategory | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
 
   const sectionId = params.id;
   const categoryId = params.categoryId;
@@ -156,6 +157,7 @@ function CategoryPageContent() {
             className="almez-section-page__back"
             onClick={() => router.push(`/sections/${sectionId}`)}
           >
+            <span aria-hidden="true">←</span>
             {t("sections.backToSection", "Back to section")}
           </button>
         </div>
@@ -173,38 +175,35 @@ function CategoryPageContent() {
 
   return (
     <main className="almez-section-page">
-      <div className="almez-section-page__container">
-        <button
-          type="button"
-          className="almez-section-page__back"
-          onClick={() => router.push(`/sections/${section.id}`)}
-        >
-          <span aria-hidden="true">←</span>
-          {t("sections.backToSection", "Back to section")}
-        </button>
+      {/* Sticky category title and description */}
+      <div className="almez-section-sticky-bar">
+        <div className="almez-section-sticky-bar__inner">
+          <button
+            type="button"
+            className="almez-section-sticky-bar__back"
+            onClick={() => router.push(`/sections/${section.id}`)}
+          >
+            <span aria-hidden="true">←</span>
+            {t("sections.backToSection", "Back to section")}
+          </button>
 
-        <header className="almez-section-page__hero">
-          {category.imageUrl && (
-            <img
-              className="almez-section-page__hero-image"
-              src={category.imageUrl}
-              alt=""
-            />
-          )}
+          <div className="almez-section-sticky-bar__text">
+            <span className="almez-section-sticky-bar__eyebrow">
+              {sectionTitle}
+            </span>
 
-          <div className="almez-section-page__hero-content">
-            <span className="almez-section-page__eyebrow">{sectionTitle}</span>
-
-            <h1 className="almez-section-page__title">{categoryTitle}</h1>
+            <h1 className="almez-section-sticky-bar__title">{categoryTitle}</h1>
 
             {categoryDescription && (
-              <p className="almez-section-page__description">
+              <p className="almez-section-sticky-bar__description">
                 {categoryDescription}
               </p>
             )}
           </div>
-        </header>
+        </div>
+      </div>
 
+      <div className="almez-section-page__container">
         <section className="almez-section-page__categories">
           <div className="almez-section-page__section-heading">
             <h2>{t("sections.itemsTitle", "Explore content")}</h2>
@@ -231,16 +230,46 @@ function CategoryPageContent() {
                   language,
                 );
 
+                const isHovered = hoveredItemId === item.id;
+
                 return (
-                  <button
+                  <div
                     key={item.id}
-                    type="button"
-                    className="almez-category-card"
+                    className={`almez-category-card ${
+                      isHovered ? "is-hovered" : ""
+                    }`}
+                    role="button"
+                    tabIndex={0}
+                    onMouseEnter={() => setHoveredItemId(item.id)}
+                    onMouseLeave={() => setHoveredItemId(null)}
+                    onFocus={() => setHoveredItemId(item.id)}
+                    onBlur={(event) => {
+                      if (
+                        !event.currentTarget.contains(
+                          event.relatedTarget as Node | null,
+                        )
+                      ) {
+                        setHoveredItemId(null);
+                      }
+                    }}
                     onClick={() =>
                       router.push(
                         `/sections/${section.id}/categories/${category.id}/items/${item.id}`,
                       )
                     }
+                    onKeyDown={(event) => {
+                      if (event.target !== event.currentTarget) {
+                        return;
+                      }
+
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+
+                        router.push(
+                          `/sections/${section.id}/categories/${category.id}/items/${item.id}`,
+                        );
+                      }
+                    }}
                   >
                     {item.imageUrl ? (
                       <img
@@ -273,7 +302,39 @@ function CategoryPageContent() {
                         {t("sections.readMore", "Read more")} →
                       </span>
                     </span>
-                  </button>
+
+                    {/* Dropdown for the item card */}
+                    <div
+                      className="almez-category-card__dropdown"
+                      aria-hidden={!isHovered}
+                    >
+                      <p className="almez-category-card__dropdown-heading">
+                        {itemTitle}
+                      </p>
+
+                      {itemDescription ? (
+                        <p className="almez-category-card__dropdown-empty">
+                          {itemDescription}
+                        </p>
+                      ) : (
+                        <p className="almez-category-card__dropdown-empty">
+                          {t(
+                            "sections.itemDetailsHint",
+                            "Open this item to read its full content.",
+                          )}
+                        </p>
+                      )}
+
+                      <a
+                        href={`/sections/${section.id}/categories/${category.id}/items/${item.id}`}
+                        className="almez-category-card__dropdown-all"
+                        tabIndex={isHovered ? 0 : -1}
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        {t("sections.readMore", "Read more")} →
+                      </a>
+                    </div>
+                  </div>
                 );
               })}
             </div>
@@ -285,12 +346,14 @@ function CategoryPageContent() {
 }
 
 export default function CategoryPage() {
+  const { t } = useTranslation();
+
   return (
     <Suspense
       fallback={
         <main className="almez-section-page">
           <div className="almez-section-page__container">
-            <p role="status">Loading category...</p>
+            <p role="status">{t("sections.loading", "Loading category...")}</p>
           </div>
         </main>
       }
