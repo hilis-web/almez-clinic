@@ -205,7 +205,7 @@ function CategoryPageContent() {
 
       <div className="almez-section-page__container">
         <section className="almez-section-page__categories">
-          <div className="almez-section-page__section-heading">
+          {/* <div className="almez-section-page__section-heading">
             <h2>{t("sections.itemsTitle", "Explore content")}</h2>
 
             <p>
@@ -214,7 +214,7 @@ function CategoryPageContent() {
                 "Choose an item to discover more.",
               )}
             </p>
-          </div>
+          </div> */}
 
           {items.length === 0 ? (
             <p className="almez-section-page__empty">

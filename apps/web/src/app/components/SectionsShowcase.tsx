@@ -164,47 +164,43 @@ export default function SectionsShowcase() {
                 <button
                   key={section.id}
                   type="button"
-                  className="almez-section-card"
+                  className="almez-category-card almez-section-showcase-card"
                   onClick={() => router.push(`/sections/${section.id}`)}
-                  aria-label={`${title} — ${t("sections.viewSection", "View section")}`}
+                  aria-label={`${title} — ${t(
+                    "sections.viewSection",
+                    "View section",
+                  )}`}
                 >
-                  <div className="almez-section-card__image-wrap">
-                    {section.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={section.imageUrl}
-                        alt=""
-                        className="almez-section-card__image"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="almez-section-card__image-placeholder">
-                        <span aria-hidden="true">✳</span>
-                      </div>
-                    )}
-
+                  {section.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      className="almez-category-card__image"
+                      src={section.imageUrl}
+                      alt=""
+                      loading="lazy"
+                    />
+                  ) : (
                     <span
-                      className="almez-section-card__arrow"
+                      className="almez-category-card__icon"
                       aria-hidden="true"
                     >
-                      ↗
+                      ✳
                     </span>
-                  </div>
+                  )}
 
-                  <div className="almez-section-card__body">
-                    <h3 className="almez-section-card__title">{title}</h3>
+                  <span className="almez-category-card__content">
+                    <span className="almez-category-card__title">{title}</span>
 
                     {description && (
-                      <p className="almez-section-card__description">
+                      <span className="almez-category-card__description">
                         {description}
-                      </p>
+                      </span>
                     )}
 
-                    <span className="almez-section-card__link">
-                      {t("sections.explore", "Explore section")}
-                      <span aria-hidden="true"> →</span>
+                    <span className="almez-category-card__link">
+                      {t("sections.explore", "Explore section")} →
                     </span>
-                  </div>
+                  </span>
                 </button>
               );
             })}

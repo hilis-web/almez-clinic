@@ -1572,6 +1572,249 @@ body {
   line-height: 1.4;
 }
 
+/* Sections showcase cards — static category-card style */
+.almez-sections .almez-section-showcase-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  text-align: start;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  background: var(--almez-card-bg, #fff);
+  border: 1px solid var(--almez-border, #e8e8e8);
+  border-radius: 18px;
+  appearance: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Two cards per row on all screen sizes */
+.almez-sections .almez-sections__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+/* Keep the same image treatment as category cards */
+.almez-sections .almez-section-showcase-card .almez-category-card__image {
+  display: block;
+  width: 100%;
+  height: 220px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+/* Placeholder for sections without an image */
+.almez-sections .almez-section-showcase-card .almez-category-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 220px;
+  flex-shrink: 0;
+  font-size: 42px;
+  background: var(--almez-surface, #f5f7f6);
+}
+
+/* Static content area */
+.almez-sections .almez-section-showcase-card .almez-category-card__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 22px;
+  box-sizing: border-box;
+}
+
+/* Prevent category-card hover dropdowns from appearing */
+.almez-sections .almez-section-showcase-card .almez-category-card__dropdown {
+  display: none !important;
+}
+
+/* Keep interaction subtle; no hover animation */
+.almez-sections .almez-section-showcase-card {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.almez-sections .almez-section-showcase-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+  border-color: #487b68;
+}
+
+.almez-sections .almez-section-showcase-card:focus-visible {
+  outline: 3px solid var(--almez-primary, #487b68);
+  outline-offset: 4px;
+}
+
+@media (max-width: 640px) {
+  .almez-sections .almez-sections__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .almez-sections .almez-section-showcase-card .almez-category-card__image,
+  .almez-sections .almez-section-showcase-card .almez-category-card__icon {
+    height: 140px;
+  }
+
+  .almez-sections .almez-section-showcase-card .almez-category-card__content {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .almez-sections .almez-section-showcase-card .almez-category-card__title {
+    font-size: 15px;
+  }
+
+  .almez-sections
+    .almez-section-showcase-card
+    .almez-category-card__description {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .almez-sections .almez-section-showcase-card .almez-category-card__link {
+    font-size: 12px;
+  }
+}
+
+/* Sections showcase — horizontal cards */
+.almez-sections .almez-sections__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.almez-sections .almez-section-showcase-card {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  min-height: 190px;
+  padding: 0;
+  overflow: hidden;
+  text-align: start;
+  font: inherit;
+  color: inherit;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  cursor: pointer;
+  appearance: none;
+  transition: border-color 0.2s ease;
+}
+
+/* Image on the left */
+.almez-sections .almez-section-showcase-card .almez-category-card__image,
+.almez-sections .almez-section-showcase-card .almez-category-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38%;
+  min-width: 38%;
+  height: auto;
+  min-height: 190px;
+  flex-shrink: 0;
+  object-fit: cover;
+  font-size: 34px;
+  background: #f5f7f6;
+}
+
+/* Text on the right */
+.almez-sections .almez-section-showcase-card .almez-category-card__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.almez-sections .almez-section-showcase-card .almez-category-card__title {
+  margin: 0;
+}
+
+.almez-sections .almez-section-showcase-card .almez-category-card__description {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.almez-sections .almez-section-showcase-card .almez-category-card__link {
+  margin-top: 4px;
+}
+
+/* No dropdown or hover animation */
+.almez-sections .almez-section-showcase-card .almez-category-card__dropdown {
+  display: none !important;
+}
+
+.almez-sections .almez-section-showcase-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.almez-sections .almez-section-showcase-card:focus-visible {
+  outline: 3px solid #487b68;
+  outline-offset: 3px;
+}
+
+/* Mobile: still two cards per row */
+@media (max-width: 640px) {
+  .almez-sections .almez-sections__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .almez-sections .almez-section-showcase-card {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .almez-sections .almez-section-showcase-card .almez-category-card__image,
+  .almez-sections .almez-section-showcase-card .almez-category-card__icon {
+    width: 100%;
+    min-width: 0;
+    height: 120px;
+    min-height: 120px;
+  }
+
+  .almez-sections .almez-section-showcase-card .almez-category-card__content {
+    gap: 7px;
+    padding: 12px;
+  }
+
+  .almez-sections .almez-section-showcase-card .almez-category-card__title {
+    font-size: 14px;
+  }
+
+  .almez-sections
+    .almez-section-showcase-card
+    .almez-category-card__description {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .almez-sections .almez-section-showcase-card .almez-category-card__link {
+    font-size: 12px;
+  }
+}
+
 /* Sponsors banner */
 .almez-sponsors {
   width: 100%;
