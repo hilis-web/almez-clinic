@@ -173,17 +173,17 @@ export default function SiteHeader() {
                 ALMEZ
               </Link>
 
-              <p className="almez-header__tagline">
+              {/* <p className="almez-header__tagline">
                 {translate(
                   "header.tagline",
                   "Cuidamos tu espalda, mejoramos tu vida",
                 )}
-              </p>
+              </p> */}
 
               <p className="almez-header__specialty">
                 {translate(
                   "header.specialty",
-                  "Cirugía ortopédica y de columna vertebral",
+                  "CLÍNICA DE CIRUGÍA ORTOPÉDICA Y COLUMNA",
                 )}
               </p>
             </div>
@@ -255,32 +255,6 @@ export default function SiteHeader() {
                       >
                         <span>{sectionTitle}</span>
                       </Link>
-
-                      <button
-                        type="button"
-                        className="almez-header__nav-link almez-mega__trigger"
-                        aria-label={`${sectionTitle} submenu`}
-                        aria-expanded={isOpen}
-                        aria-controls={`almez-mega-${section.id}`}
-                        onClick={() =>
-                          setOpenSectionId(isOpen ? null : section.id)
-                        }
-                      >
-                        <svg
-                          className="almez-mega__chevron"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="m5 7.5 5 5 5-5"
-                            stroke="currentColor"
-                            strokeWidth="1.7"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </button>
                     </div>
                   </div>
 

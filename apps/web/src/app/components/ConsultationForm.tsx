@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
@@ -127,11 +128,12 @@ export default function ConsultationForm({
   }
 
   const inputClass = "almez-consultation__input";
-
   const contentId = `${formPrefix}-consultation-form-content`;
+
   if (isFloating && isInlineVisible) {
     return null;
   }
+
   return (
     <section
       id={
@@ -192,9 +194,14 @@ export default function ConsultationForm({
             id={`${formPrefix}-consultationForm`}
             method="post"
             onSubmit={handleSubmit}
-            className="space-y-4"
+            className={
+              isFloating ? "space-y-4" : "almez-consultation__form-grid"
+            }
           >
-            <div>
+            {/* Full name: its own row */}
+            <div
+              className={isFloating ? "" : "almez-consultation__field--full"}
+            >
               <label
                 htmlFor={`${formPrefix}-fullName`}
                 className="mb-1.5 block text-sm font-medium text-gray-700"
@@ -219,6 +226,7 @@ export default function ConsultationForm({
               />
             </div>
 
+            {/* Email: first half of the row */}
             <div>
               <label
                 htmlFor={`${formPrefix}-email`}
@@ -241,6 +249,7 @@ export default function ConsultationForm({
               />
             </div>
 
+            {/* Phone: second half of the row */}
             <div>
               <label
                 htmlFor={`${formPrefix}-phone`}
@@ -263,6 +272,7 @@ export default function ConsultationForm({
               />
             </div>
 
+            {/* Consultation type: first half of the row */}
             <div>
               <label
                 htmlFor={`${formPrefix}-consultationType`}
@@ -293,6 +303,7 @@ export default function ConsultationForm({
               </select>
             </div>
 
+            {/* Description: second half of the row */}
             <div>
               <label
                 htmlFor={`${formPrefix}-additionalInfo`}
@@ -318,7 +329,11 @@ export default function ConsultationForm({
             {error && (
               <p
                 role="alert"
-                className="rounded-lg bg-red-50 p-3 text-sm text-red-700"
+                className={
+                  isFloating
+                    ? "rounded-lg bg-red-50 p-3 text-sm text-red-700"
+                    : "almez-consultation__field--full rounded-lg bg-red-50 p-3 text-sm text-red-700"
+                }
               >
                 {error}
               </p>
@@ -327,23 +342,39 @@ export default function ConsultationForm({
             {success && (
               <p
                 role="status"
-                className="rounded-lg bg-green-50 p-3 text-sm text-green-700"
+                className={
+                  isFloating
+                    ? "rounded-lg bg-green-50 p-3 text-sm text-green-700"
+                    : "almez-consultation__field--full rounded-lg bg-green-50 p-3 text-sm text-green-700"
+                }
               >
                 {success}
               </p>
             )}
 
+            {/* Submit button: its own row */}
             <button
               type="submit"
               disabled={loading}
-              className="almez-consultation__submit"
+              className={
+                isFloating
+                  ? "almez-consultation__submit"
+                  : "almez-consultation__submit almez-consultation__field--full"
+              }
             >
               {loading
                 ? t("consultation.submitting")
                 : t("consultation.submit")}
             </button>
 
-            <p className="text-xs leading-5 text-gray-500">
+            {/* reCAPTCHA notice: directly below the button */}
+            <p
+              className={
+                isFloating
+                  ? "text-xs leading-5 text-gray-500"
+                  : "almez-consultation__field--full text-xs leading-5 text-gray-500"
+              }
+            >
               {t("consultation.recaptchaNotice")}
             </p>
           </form>

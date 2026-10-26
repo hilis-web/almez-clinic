@@ -51,7 +51,7 @@
 
   "header": {
     "tagline": "We take care of your back, we improve your life",
-    "specialty": "Orthopaedic and spine surgery",
+    "specialty": "ORTHOPEDIC AND SPINE SURGERY CLINIC",
     "doctorName": "Dr Aaron Hilis",
     "credentials": "MB ChB BSc, MA, FRCS, PhD",
     "qualification": "Master's degree in sports medicine",
@@ -62,8 +62,8 @@
   "about": {
     "eyebrow": "About Almez",
     "title": "We care for your health and wellbeing",
-    "description": "We provide specialised medical care with a patient-centred approach, helping you understand your options and make informed decisions about your health.",
-    "approach": "Our goal is to provide attentive, professional care tailored to your needs.",
+    "description": "Dr. Aaron is a spine surgeon specializing in orthopedic and neurosurgery, with extensive professional experience and based in Extremadura, Spain. He trained at renowned centers of excellence in spine surgery in Spain, the United Kingdom, and the United States, consolidating his expertise in both disciplines. He holds a Doctorate in Medicine and Surgery from the University of Santiago de Compostela and has a long track record in research and academic publications.",
+    "approach": "Dr. Aaron treats a wide range of spinal conditions, including sciatica, back pain (lumbago), neck pain, deformities in children and adults (scoliosis), trauma, infections, and tumors. Currently, his practice focuses on complex cases and revision surgeries. We are confident that we can offer you a balanced, highly competent, and confidential opinion regarding your back problems. Can we help you?",
     "cta": "Request a consultation",
     "visualCaption": "Specialised medical care"
   },
@@ -84,6 +84,12 @@
 
   "footer": {
     "description": "At Almez, we provide compassionate medical care and services designed to support your health and well-being.",
+    "spineSurgery": "Spine Surgery",
+    "orthopedics": "Orthopedics",
+    "traumatology": "Traumatology",
+    "location": "Location",
+    "openMap": "View on Google Maps",
+    "mapTitle": "Almez location in Don Benito",
     "navigationLabel": "Site navigation",
     "linksTitle": "Quick links",
     "links": {
@@ -96,7 +102,11 @@
     "contactDescription": "We are here to help. Request a consultation and our team will guide you.",
     "contactButton": "Request a consultation",
     "copyright": "All rights reserved.",
-    "tagline": "Caring for you, caring for your health."
+    "tagline": "Caring for you, caring for your health.",
+    "legalNotice": "Legal Notice",
+    "privacyPolicy": "Privacy Policy",
+    "cookiePolicy": "Cookie Policy",
+    "close": "Close"
   },
 
   "cookies": {
@@ -113,5 +123,15 @@
     "configure": "Configure",
     "save": "Save preferences",
     "closeSettings": "Close settings"
+  },
+  "sections": {
+    "eyebrow": "Explore Almez",
+    "title": "Our Medical Specialties",
+    "description": "Explore our medical specialties and discover the information you need.",
+    "error": "We couldn't load the sections right now.",
+    "retry": "Try again",
+    "empty": "No published sections are available yet.",
+    "viewSection": "View section",
+    "explore": "Explore section"
   }
 }

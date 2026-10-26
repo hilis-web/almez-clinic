@@ -50,7 +50,7 @@
   },
   "header": {
     "tagline": "Cuidamos tu espalda, mejoramos tu vida",
-    "specialty": "Cirugía ortopédica y de columna vertebral",
+    "specialty": "CLÍNICA DE CIRUGÍA ORTOPÉDICA Y COLUMNA",
     "doctorName": "Dr. Aaron Hilis",
     "credentials": "MB ChB BSc, MA, FRCS, PhD",
     "qualification": "Máster en medicina deportiva",
@@ -61,8 +61,8 @@
   "about": {
     "eyebrow": "Sobre Almez",
     "title": "Cuidamos de tu salud y bienestar",
-    "description": "Ofrecemos atención médica especializada con un enfoque centrado en cada paciente, para ayudarte a comprender tus opciones y tomar decisiones informadas sobre tu salud.",
-    "approach": "Nuestro objetivo es ofrecer una atención cercana, profesional y adaptada a tus necesidades.",
+    "description": "El Dr. Aaron es un cirujano de columna vertebral especializado en cirugía ortopédica y neurocirugía, con una amplia trayectoria profesional y establecido en Extremadura. Su formación se llevó a cabo en reconocidos centros de excelencia en cirugía de columna en España, el Reino Unido y los Estados Unidos, consolidando su experiencia en ambas disciplinas. Es Doctor en Medicina y Cirugía por la Universidad de Santiago de Compostela y cuenta con una extensa trayectoria en investigación y publicaciones académicas.",
+    "approach": "El Dr. Aaron trata un amplio espectro de afecciones de la columna, incluyendo dolor ciático, dolor de espalda (lumbago), dolor cervical, deformidades en niños y adultos (escoliosis), traumatismos, infecciones y tumores. Actualmente, su práctica se enfoca en casos complejos y en cirugías de revisión. Estamos seguros de que podemos ofrecerle una opinión equilibrada, altamente competente y confidencial sobre sus problemas de espalda. ¿Podemos ayudarte?",
     "cta": "Solicitar una consulta",
     "visualCaption": "Atención médica especializada"
   },
@@ -83,6 +83,13 @@
 
   "footer": {
     "description": "En Almez te acompañamos con atención médica cercana y servicios diseñados para cuidar de tu salud y bienestar.",
+    "spineSurgery": "Cirugía de Columna",
+    "orthopedics": "Ortopedia",
+    "traumatology": "Traumatología",
+    "location": "Ubicación",
+    "openMap": "Ver en Google Maps",
+    "mapTitle": "Ubicación de Almez en Don Benito",
+
     "navigationLabel": "Navegación del sitio",
     "linksTitle": "Enlaces rápidos",
     "links": {
@@ -95,7 +102,11 @@
     "contactDescription": "Estamos aquí para ayudarte. Solicita una consulta y nuestro equipo te orientará.",
     "contactButton": "Solicitar una consulta",
     "copyright": "Todos los derechos reservados.",
-    "tagline": "Cuidamos de ti, cuidamos de tu salud."
+    "tagline": "Cuidamos de ti, cuidamos de tu salud.",
+    "legalNotice": "Aviso legal",
+    "privacyPolicy": "Política de privacidad",
+    "cookiePolicy": "Política de cookies",
+    "close": "Cerrar"
   },
   "cookies": {
     "title": "Preferencias de cookies",
@@ -111,5 +122,15 @@
     "configure": "Configurar",
     "save": "Guardar preferencias",
     "closeSettings": "Cerrar configuración"
+  },
+  "sections": {
+    "eyebrow": "Explora Almez",
+    "title": "Nuestras especialidades médicas",
+    "description": "Explora nuestras especialidades médicas y descubre la información que necesitas.",
+    "error": "No hemos podido cargar las secciones en este momento.",
+    "retry": "Intentar de nuevo",
+    "empty": "Todavía no hay secciones publicadas disponibles.",
+    "viewSection": "Ver sección",
+    "explore": "Explorar sección"
   }
 }
