@@ -1195,7 +1195,7 @@ body {
   position: sticky;
   top: var(--almez-sticky-top, 76px);
   z-index: 100;
-  width: 100vw;
+  /* width: 100vw; */
   margin-left: calc(50% - 50vw);
   box-sizing: border-box;
   background: var(--almez-beige, #f4f7f4);
