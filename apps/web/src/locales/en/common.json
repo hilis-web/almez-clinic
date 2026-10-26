@@ -133,5 +133,8 @@
     "empty": "No published sections are available yet.",
     "viewSection": "View section",
     "explore": "Explore section"
+  },
+  "common": {
+    "back": "Back"
   }
 }
