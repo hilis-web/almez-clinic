@@ -175,7 +175,7 @@ export default function SectionPageClient() {
             onClick={() => router.push("/")}
           >
             <span aria-hidden="true">←</span>
-            {t("sections.backHome", "Back to home")}
+            {t("common.back", "Volver")}
           </button>
 
           <div className="almez-section-sticky-bar__text">

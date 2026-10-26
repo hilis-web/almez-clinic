@@ -184,7 +184,7 @@ function CategoryPageContent() {
             onClick={() => router.push(`/sections/${section.id}`)}
           >
             <span aria-hidden="true">←</span>
-            {t("sections.backToSection", "Back to section")}
+            {t("common.back", "Volver")}
           </button>
 
           <div className="almez-section-sticky-bar__text">
