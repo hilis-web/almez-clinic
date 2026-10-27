@@ -3886,3 +3886,105 @@ body {
     font-size: 1rem !important;
   }
 }
+
+/* Mega menu: hover only the individual link */
+
+.almez-mega__category-title,
+.almez-mega__item-link,
+.almez-mega__more,
+.almez-mega__view-all {
+  display: block;
+  border-radius: 6px;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.almez-mega__category-title:hover,
+.almez-mega__category-title:focus-visible,
+.almez-mega__item-link:hover,
+.almez-mega__item-link:focus-visible,
+.almez-mega__more:hover,
+.almez-mega__more:focus-visible,
+.almez-mega__view-all:hover,
+.almez-mega__view-all:focus-visible {
+  background: #f1f6f2;
+  color: var(--almez-green, #496e5a);
+  outline: none;
+}
+
+/* Mega menu links: spacing, right-aligned arrow and hover */
+
+.almez-mega__category-title,
+.almez-mega__item-link,
+.almez-mega__more,
+.almez-mega__view-all {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.almez-mega__item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.almez-mega__item-list li {
+  min-width: 0;
+}
+
+.almez-mega__category-title:hover,
+.almez-mega__category-title:focus-visible,
+.almez-mega__item-link:hover,
+.almez-mega__item-link:focus-visible,
+.almez-mega__more:hover,
+.almez-mega__more:focus-visible,
+.almez-mega__view-all:hover,
+.almez-mega__view-all:focus-visible {
+  background: #f1f6f2;
+  color: var(--almez-green, #496e5a);
+  outline: none;
+}
+
+.almez-mega__category-title::after,
+.almez-mega__item-link::after {
+  content: "→";
+  flex-shrink: 0;
+  color: var(--almez-green, #496e5a);
+  opacity: 0.75;
+  transition: transform 160ms ease;
+}
+
+.almez-mega__category-title:hover::after,
+.almez-mega__item-link:hover::after {
+  transform: translateX(3px);
+}
+
+.almez-mega__more,
+.almez-mega__view-all {
+  justify-content: space-between;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .almez-mega__category-title,
+  .almez-mega__item-link,
+  .almez-mega__more,
+  .almez-mega__view-all,
+  .almez-mega__category-title::after,
+  .almez-mega__item-link::after {
+    transition: none;
+  }
+}
