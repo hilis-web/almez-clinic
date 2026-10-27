@@ -57,6 +57,7 @@ export default function SiteHeader() {
 
   const [mounted, setMounted] = useState(false);
   const [sections, setSections] = useState<Section[]>([]);
+  const [isLoadingSections, setIsLoadingSections] = useState(true);
   const [openSectionId, setOpenSectionId] = useState<string | null>(null);
 
   const language =
@@ -95,6 +96,10 @@ export default function SiteHeader() {
         }
 
         console.error("Failed to load navigation sections:", error);
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoadingSections(false);
+        }
       }
     }
 
@@ -230,126 +235,147 @@ export default function SiteHeader() {
             </a>
 
             {/* Dynamic sections from the API */}
-            {sections.map((section) => {
-              const isOpen = openSectionId === section.id;
+            {isLoadingSections ? (
+              <div
+                className="almez-nav-skeleton-group"
+                role="status"
+                aria-label={translate(
+                  "navigation.loadingSections",
+                  "Loading sections",
+                )}
+              >
+                {[1, 2, 3, 4].map((item) => (
+                  <span
+                    key={item}
+                    className={`almez-nav-skeleton almez-nav-skeleton--${item}`}
+                    aria-hidden="true"
+                  />
+                ))}
+              </div>
+            ) : (
+              sections.map((section) => {
+                const isOpen = openSectionId === section.id;
 
-              const sectionTitle = getLocalizedText(section.title, language);
+                const sectionTitle = getLocalizedText(section.title, language);
 
-              const sectionDescription = getLocalizedText(
-                section.description,
-                language,
-              );
+                const sectionDescription = getLocalizedText(
+                  section.description,
+                  language,
+                );
 
-              return (
-                <div
-                  key={section.id}
-                  className={`almez-mega__nav-item ${isOpen ? "is-open" : ""}`}
-                  onMouseEnter={() => setOpenSectionId(section.id)}
-                >
-                  <div className="almez-mega__trigger-group">
-                    <div className="almez-mega__item">
-                      <Link
-                        href={`/sections/${section.id}`}
-                        className="almez-header__nav-link almez-mega__section-link"
-                        onClick={closeMenu}
-                      >
-                        <span>{sectionTitle}</span>
-                      </Link>
-                    </div>
-                  </div>
-
-                  {isOpen && (
-                    <div
-                      id={`almez-mega-${section.id}`}
-                      className="almez-mega__panel"
-                    >
-                      <div className="almez-mega__inner">
-                        <div className="almez-mega__intro">
-                          <span className="almez-mega__eyebrow">
-                            {translate("navigation.explore", "Explore")}
-                          </span>
-
-                          <h2 className="almez-mega__section-title">
-                            {sectionTitle}
-                          </h2>
-
-                          {sectionDescription && (
-                            <p className="almez-mega__description">
-                              {sectionDescription}
-                            </p>
-                          )}
-
-                          <Link
-                            href={`/sections/${section.id}`}
-                            className="almez-mega__view-all"
-                            onClick={closeMenu}
-                          >
-                            {translate("navigation.viewAll", "View all")}
-                            <span aria-hidden="true"> →</span>
-                          </Link>
-                        </div>
-
-                        <div className="almez-mega__categories">
-                          {section.categories?.map((category) => {
-                            const categoryTitle = getLocalizedText(
-                              category.title,
-                              language,
-                            );
-
-                            const items = [...(category.items || [])]
-                              .filter((item) => item.status !== "UNPUBLISHED")
-                              .sort((a, b) => a.sortOrder - b.sortOrder);
-
-                            const visibleItems = items.slice(0, 5);
-
-                            return (
-                              <div
-                                key={category.id}
-                                className="almez-mega__category"
-                              >
-                                <Link
-                                  href={`/sections/${section.id}/categories/${category.id}`}
-                                  className="almez-mega__category-title"
-                                  onClick={closeMenu}
-                                >
-                                  {categoryTitle}
-                                </Link>
-
-                                <ul className="almez-mega__item-list">
-                                  {visibleItems.map((item) => (
-                                    <li key={item.id}>
-                                      <Link
-                                        href={`/sections/${section.id}/categories/${category.id}/items/${item.id}`}
-                                        className="almez-mega__item-link"
-                                        onClick={closeMenu}
-                                      >
-                                        {getLocalizedText(item.title, language)}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-
-                                {items.length > 5 && (
-                                  <Link
-                                    href={`/sections/${section.id}/categories/${category.id}`}
-                                    className="almez-mega__more"
-                                    onClick={closeMenu}
-                                  >
-                                    {translate("navigation.more", "More")}
-                                    <span aria-hidden="true"> →</span>
-                                  </Link>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
+                return (
+                  <div
+                    key={section.id}
+                    className={`almez-mega__nav-item ${isOpen ? "is-open" : ""}`}
+                    onMouseEnter={() => setOpenSectionId(section.id)}
+                  >
+                    <div className="almez-mega__trigger-group">
+                      <div className="almez-mega__item">
+                        <Link
+                          href={`/sections/${section.id}`}
+                          className="almez-header__nav-link almez-mega__section-link"
+                          onClick={closeMenu}
+                        >
+                          <span>{sectionTitle}</span>
+                        </Link>
                       </div>
                     </div>
-                  )}
-                </div>
-              );
-            })}
 
+                    {isOpen && (
+                      <div
+                        id={`almez-mega-${section.id}`}
+                        className="almez-mega__panel"
+                      >
+                        <div className="almez-mega__inner">
+                          <div className="almez-mega__intro">
+                            <span className="almez-mega__eyebrow">
+                              {translate("navigation.explore", "Explore")}
+                            </span>
+
+                            <h2 className="almez-mega__section-title">
+                              {sectionTitle}
+                            </h2>
+
+                            {sectionDescription && (
+                              <p className="almez-mega__description">
+                                {sectionDescription}
+                              </p>
+                            )}
+
+                            <Link
+                              href={`/sections/${section.id}`}
+                              className="almez-mega__view-all"
+                              onClick={closeMenu}
+                            >
+                              {translate("navigation.viewAll", "View all")}
+                              <span aria-hidden="true"> →</span>
+                            </Link>
+                          </div>
+
+                          <div className="almez-mega__categories">
+                            {section.categories?.map((category) => {
+                              const categoryTitle = getLocalizedText(
+                                category.title,
+                                language,
+                              );
+
+                              const items = [...(category.items || [])]
+                                .filter((item) => item.status !== "UNPUBLISHED")
+                                .sort((a, b) => a.sortOrder - b.sortOrder);
+
+                              const visibleItems = items.slice(0, 5);
+
+                              return (
+                                <div
+                                  key={category.id}
+                                  className="almez-mega__category"
+                                >
+                                  <Link
+                                    href={`/sections/${section.id}/categories/${category.id}`}
+                                    className="almez-mega__category-title"
+                                    onClick={closeMenu}
+                                  >
+                                    {categoryTitle}
+                                  </Link>
+
+                                  <ul className="almez-mega__item-list">
+                                    {visibleItems.map((item) => (
+                                      <li key={item.id}>
+                                        <Link
+                                          href={`/sections/${section.id}/categories/${category.id}/items/${item.id}`}
+                                          className="almez-mega__item-link"
+                                          onClick={closeMenu}
+                                        >
+                                          {getLocalizedText(
+                                            item.title,
+                                            language,
+                                          )}
+                                        </Link>
+                                      </li>
+                                    ))}
+                                  </ul>
+
+                                  {items.length > 5 && (
+                                    <Link
+                                      href={`/sections/${section.id}/categories/${category.id}`}
+                                      className="almez-mega__more"
+                                      onClick={closeMenu}
+                                    >
+                                      {translate("navigation.more", "More")}
+                                      <span aria-hidden="true"> →</span>
+                                    </Link>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
             {/* Contact is fixed and always last */}
             <a
               href="/#contact"
