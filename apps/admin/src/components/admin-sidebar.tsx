@@ -41,7 +41,7 @@ export default function AdminSidebar() {
 
       <nav className="flex-1 space-y-2 px-4 py-6">
         <p className="mb-4 px-3 text-sm font-semibold tracking-wider text-[#758078]">
-          {t("navigation.section")}
+          {t("navigation.sections")}
         </p>
 
         {navigation.map((item) => {

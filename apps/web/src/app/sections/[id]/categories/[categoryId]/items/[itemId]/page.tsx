@@ -177,16 +177,14 @@ function ItemPageContent() {
           </button>
 
           <div className="almez-section-sticky-bar__text">
-            {sectionTitle && (
-              <span className="almez-section-sticky-bar__eyebrow">
-                {sectionTitle}
-              </span>
-            )}
+            <div className="almez-section-sticky-bar__eyebrow">
+              {sectionTitle}
+              {sectionTitle && categoryTitle && " / "}
+              {categoryTitle}
+            </div>
 
-            {categoryTitle && (
-              <h1 className="almez-section-sticky-bar__title">
-                {categoryTitle}
-              </h1>
+            {title && (
+              <h1 className="almez-section-sticky-bar__title">{title}</h1>
             )}
           </div>
         </div>

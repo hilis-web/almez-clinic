@@ -3670,6 +3670,7 @@ body {
   margin: 0 0 15px;
   color: #bb6923;
   font-weight: 600;
+  font-size: 1.36rem;
 }
 
 .almez-item-detail__content .feature-box {
@@ -3697,6 +3698,7 @@ body {
 
 .almez-item-detail__content ul {
   padding-left: 20px;
+  list-style: inside;
 }
 
 .almez-item-detail__content li {
