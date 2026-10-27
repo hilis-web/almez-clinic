@@ -1195,11 +1195,13 @@ body {
 /* ALMEZ — Sticky section title bar */
 .almez-section-sticky-bar {
   position: sticky;
-  top: var(--almez-sticky-top, 76px);
+  top: var(--almez-sticky-top, 220px);
   z-index: 100;
-  /* width: 100vw; */
+
   margin-left: calc(50% - 50vw);
   box-sizing: border-box;
+  width: 100%;
+
   background: var(--almez-beige, #f4f7f4);
   color: #fff;
   border-bottom: 3px solid var(--almez-beige, #f4f7f4);
