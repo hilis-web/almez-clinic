@@ -607,15 +607,17 @@ body {
 
 .almez-about__inner {
   display: grid;
-  width: min(1120px, calc(100% - 40px));
+  width: min(1240px, calc(100% - 64px));
   margin-inline: auto;
-  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.7fr);
   align-items: center;
-  gap: 72px;
+  gap: 48px;
 }
 
 .almez-about__content {
-  max-width: 620px;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
 }
 
 .almez-about__eyebrow {
@@ -3882,5 +3884,97 @@ body {
   .almez-section-page__description,
   .almez-category-card__description {
     font-size: 1rem !important;
+  }
+}
+
+/* Mega menu items — same hover effect as category cards */
+.almez-header__mega-menu a,
+.almez-header__mega-menu button {
+  border-radius: 8px;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.almez-header__mega-menu a:hover,
+.almez-header__mega-menu button:hover {
+  transform: translateY(-3px);
+  border-color: var(--almez-green, #496e5a);
+  box-shadow: 0 12px 28px rgb(27 59 54 / 15%);
+}
+
+.almez-header__mega-menu a:focus-visible,
+.almez-header__mega-menu button:focus-visible {
+  outline: 3px solid var(--almez-green, #496e5a);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .almez-header__mega-menu a,
+  .almez-header__mega-menu button {
+    transition: none;
+  }
+}
+
+/* Mega menu hover — match category card interaction */
+
+.almez-mega__item,
+.almez-mega__category {
+  min-width: 0;
+  border-radius: 10px;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.almez-mega__item:hover,
+.almez-mega__item:focus-within,
+.almez-mega__category:hover,
+.almez-mega__category:focus-within {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgb(27 59 54 / 15%);
+}
+
+.almez-mega__section-link,
+.almez-mega__category-title,
+.almez-mega__item-link,
+.almez-mega__more,
+.almez-mega__view-all {
+  transition:
+    color 180ms ease,
+    background-color 180ms ease;
+}
+
+.almez-mega__section-link:hover,
+.almez-mega__category-title:hover,
+.almez-mega__item-link:hover,
+.almez-mega__more:hover,
+.almez-mega__view-all:hover {
+  color: var(--almez-green, #496e5a);
+}
+
+.almez-mega__section-link:focus-visible,
+.almez-mega__category-title:focus-visible,
+.almez-mega__item-link:focus-visible,
+.almez-mega__more:focus-visible,
+.almez-mega__view-all:focus-visible {
+  outline: 2px solid var(--almez-green, #496e5a);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .almez-mega__item,
+  .almez-mega__category,
+  .almez-mega__section-link,
+  .almez-mega__category-title,
+  .almez-mega__item-link,
+  .almez-mega__more,
+  .almez-mega__view-all {
+    transition: none;
   }
 }
