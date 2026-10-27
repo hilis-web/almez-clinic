@@ -194,7 +194,46 @@ function ItemPageContent() {
 
       <div className="almez-section-page__container">
         {loading ? (
-          <p role="status">{t("common.loading", "Cargando...")}</p>
+          <div
+            className="almez-loading"
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <div className="almez-loading__intro">
+              <span className="almez-loading__icon" aria-hidden="true">
+                <span className="almez-loading__spinner" />
+              </span>
+
+              <h2 className="almez-loading__title">
+                {t(
+                  "sections.loadingItemTitle",
+                  "Estamos preparando el contenido",
+                )}
+              </h2>
+
+              <p className="almez-loading__description">
+                {t(
+                  "sections.loadingItem",
+                  "Cargando los detalles del elemento...",
+                )}
+              </p>
+            </div>
+
+            <div className="almez-loading__grid" aria-hidden="true">
+              {[1, 2].map((placeholder) => (
+                <div className="almez-loading__card" key={placeholder}>
+                  <div className="almez-loading__image" />
+
+                  <div className="almez-loading__body">
+                    <div className="almez-loading__line almez-loading__line--title" />
+                    <div className="almez-loading__line" />
+                    <div className="almez-loading__line almez-loading__line--short" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         ) : error ? (
           <p role="alert">
             {t("common.error", "No se pudo cargar el contenido.")}
@@ -240,12 +279,44 @@ function ItemPageContent() {
 }
 
 export default function ItemPage() {
+  const { t } = useTranslation("common");
   return (
     <Suspense
       fallback={
         <main className="almez-section-page">
-          <div className="almez-section-page__container">
-            <p role="status">Cargando...</p>
+          <div className="almez-section-page__container almez-loading">
+            <div className="almez-loading__intro">
+              <span className="almez-loading__icon" aria-hidden="true">
+                <span className="almez-loading__spinner" />
+              </span>
+
+              <h2 className="almez-loading__title">
+                {t(
+                  "sections.loadingItemTitle",
+                  "Estamos preparando el contenido",
+                )}
+              </h2>
+
+              <p className="almez-loading__description">
+                {t(
+                  "sections.loadingItem",
+                  "Cargando los detalles del elemento...",
+                )}
+              </p>
+            </div>
+
+            <div className="almez-loading__grid" aria-hidden="true">
+              {[1, 2].map((placeholder) => (
+                <div className="almez-loading__card" key={placeholder}>
+                  <div className="almez-loading__image" />
+                  <div className="almez-loading__body">
+                    <div className="almez-loading__line almez-loading__line--title" />
+                    <div className="almez-loading__line" />
+                    <div className="almez-loading__line almez-loading__line--short" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </main>
       }

@@ -132,7 +132,11 @@
     "retry": "Try again",
     "empty": "No published sections are available yet.",
     "viewSection": "View section",
-    "explore": "Explore section"
+    "explore": "Explore section",
+    "loadingCategoryTitle": "Preparing this category",
+    "loadingCategory": "Loading items in this category...",
+    "loadingItemTitle": "Preparing your content",
+    "loadingItem": "Loading item details..."
   },
   "common": {
     "back": "Back"

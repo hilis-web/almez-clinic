@@ -131,7 +131,11 @@
     "retry": "Intentar de nuevo",
     "empty": "Todavía no hay secciones publicadas disponibles.",
     "viewSection": "Ver sección",
-    "explore": "Explorar sección"
+    "explore": "Explorar sección",
+    "loadingCategoryTitle": "Estamos preparando esta categoría",
+    "loadingCategory": "Cargando los elementos de esta categoría...",
+    "loadingItemTitle": "Estamos preparando el contenido",
+    "loadingItem": "Cargando los detalles del elemento..."
   },
   "common": {
     "back": "Volver"

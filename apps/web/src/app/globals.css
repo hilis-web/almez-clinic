@@ -3988,3 +3988,300 @@ body {
     transition: none;
   }
 }
+
+/* =========================================================
+   ALMEZ MEGA MENU — FINAL HOVER AND LINK ALIGNMENT
+========================================================= */
+
+/* Keep the section tab highlighted while its dropdown is open */
+.almez-mega__nav-item:hover .almez-mega__item,
+.almez-mega__nav-item.is-open .almez-mega__item {
+  background-color: #fff;
+}
+
+/* Prevent the nested link from overriding the tab background */
+.almez-mega__item .almez-mega__section-link {
+  background: transparent;
+}
+
+/* Keep exactly three equal-width category columns on desktop */
+.almez-mega__categories {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+  min-width: 0;
+}
+
+.almez-mega__category {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Every category/item link uses the full width of its column */
+.almez-mega__category-title,
+.almez-mega__item-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+/* Long labels wrap instead of stretching their column */
+.almez-mega__category-title,
+.almez-mega__item-link {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* Keep all arrows aligned at the far right */
+.almez-mega__category-title::after,
+.almez-mega__item-link::after {
+  content: "→";
+  justify-self: end;
+  white-space: nowrap;
+  color: var(--almez-green, #496e5a);
+  transition: transform 160ms ease;
+}
+
+/* Only the hovered link gets the background */
+.almez-mega__category-title:hover,
+.almez-mega__category-title:focus-visible,
+.almez-mega__item-link:hover,
+.almez-mega__item-link:focus-visible {
+  background: #f1f6f2;
+  color: var(--almez-green, #496e5a);
+  outline: none;
+}
+
+.almez-mega__category-title:hover::after,
+.almez-mega__item-link:hover::after {
+  transform: translateX(3px);
+}
+
+/* Consistent spacing between individual items */
+.almez-mega__item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.almez-mega__item-list li {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Tablet and mobile layouts */
+@media (max-width: 768px) {
+  .almez-mega__categories {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .almez-mega__categories {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .almez-mega__category-title,
+  .almez-mega__item-link,
+  .almez-mega__category-title::after,
+  .almez-mega__item-link::after {
+    transition: none;
+  }
+}
+
+/* Keep navigation section text green while its dropdown is open */
+.almez-mega__nav-item:hover .almez-mega__section-link,
+.almez-mega__nav-item:hover .almez-mega__section-link span,
+.almez-mega__nav-item.is-open .almez-mega__section-link,
+.almez-mega__nav-item.is-open .almez-mega__section-link span {
+  color: var(--almez-green, #496e5a) !important;
+}
+
+/* Almez — section loading experience */
+
+.almez-loading {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: 3rem 4rem;
+}
+
+.almez-loading__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.almez-loading__icon {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  place-items: center;
+  margin-bottom: 0.35rem;
+  border: 1px solid rgba(73, 110, 90, 0.18);
+  border-radius: 1.25rem;
+  background: #e8f0e9;
+}
+
+.almez-loading__spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid rgba(73, 110, 90, 0.2);
+  border-top-color: var(--almez-green, #496e5a);
+  border-radius: 50%;
+  animation: almez-loading-spin 0.8s linear infinite;
+}
+
+.almez-loading__title {
+  margin: 0;
+  color: var(--almez-dark-green, #1b3b36);
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.almez-loading__description {
+  margin: 0;
+  color: var(--almez-text-muted, #758078);
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.almez-loading__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.almez-loading__card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--almez-border, #e3e8e3);
+  border-radius: 1.25rem;
+  background: #fff;
+}
+
+.almez-loading__image {
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(100deg, #e9eee9 20%, #f7f9f7 40%, #e9eee9 60%);
+  background-size: 200% 100%;
+  animation: almez-loading-shimmer 1.5s ease-in-out infinite;
+}
+
+.almez-loading__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 1.25rem;
+}
+
+.almez-loading__line,
+.almez-loading__action {
+  height: 0.75rem;
+  max-width: 100%;
+  border-radius: 999px;
+  background: #edf1ed;
+}
+
+.almez-loading__line--title {
+  width: 65%;
+  height: 1.1rem;
+  margin-bottom: 0.15rem;
+}
+
+.almez-loading__line {
+  width: 85%;
+}
+
+.almez-loading__line--short {
+  width: 48%;
+}
+
+.almez-loading__action {
+  width: 38%;
+  height: 0.65rem;
+  margin-top: 0.5rem;
+  background: #e3ece4;
+}
+
+@keyframes almez-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes almez-loading-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .almez-loading__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .almez-loading {
+    min-height: 55vh;
+    padding-block: 2.5rem 3rem;
+  }
+
+  .almez-loading__intro {
+    margin-bottom: 1.75rem;
+  }
+
+  .almez-loading__grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .almez-loading__card {
+    display: grid;
+    grid-template-columns: 36% minmax(0, 1fr);
+    border-radius: 1rem;
+  }
+
+  .almez-loading__image {
+    height: 100%;
+    min-height: 145px;
+    aspect-ratio: auto;
+  }
+
+  .almez-loading__body {
+    justify-content: center;
+    padding: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .almez-loading__spinner,
+  .almez-loading__image {
+    animation: none;
+  }
+}

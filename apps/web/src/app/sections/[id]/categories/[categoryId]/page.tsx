@@ -135,8 +135,46 @@ function CategoryPageContent() {
   if (loading) {
     return (
       <main className="almez-section-page">
-        <div className="almez-section-page__container">
-          <p role="status">{t("sections.loading", "Loading category...")}</p>
+        <div
+          className="almez-section-page__container almez-loading"
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div className="almez-loading__intro">
+            <span className="almez-loading__icon" aria-hidden="true">
+              <span className="almez-loading__spinner" />
+            </span>
+
+            <h1 className="almez-loading__title">
+              {t(
+                "sections.loadingCategoryTitle",
+                "Estamos preparando esta categoría",
+              )}
+            </h1>
+
+            <p className="almez-loading__description">
+              {t(
+                "sections.loadingCategory",
+                "Cargando los elementos de esta categoría...",
+              )}
+            </p>
+          </div>
+
+          <div className="almez-loading__grid" aria-hidden="true">
+            {[1, 2, 3, 4].map((item) => (
+              <div className="almez-loading__card" key={item}>
+                <div className="almez-loading__image" />
+
+                <div className="almez-loading__body">
+                  <div className="almez-loading__line almez-loading__line--title" />
+                  <div className="almez-loading__line" />
+                  <div className="almez-loading__line almez-loading__line--short" />
+                  <div className="almez-loading__action" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </main>
     );
@@ -352,8 +390,45 @@ export default function CategoryPage() {
     <Suspense
       fallback={
         <main className="almez-section-page">
-          <div className="almez-section-page__container">
-            <p role="status">{t("sections.loading", "Loading category...")}</p>
+          <div
+            className="almez-section-page__container almez-loading"
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <div className="almez-loading__intro">
+              <span className="almez-loading__icon" aria-hidden="true">
+                <span className="almez-loading__spinner" />
+              </span>
+
+              <h1 className="almez-loading__title">
+                {t(
+                  "sections.loadingCategoryTitle",
+                  "Estamos preparando esta categoría",
+                )}
+              </h1>
+
+              <p className="almez-loading__description">
+                {t(
+                  "sections.loadingCategory",
+                  "Cargando los elementos de esta categoría...",
+                )}
+              </p>
+            </div>
+
+            <div className="almez-loading__grid" aria-hidden="true">
+              {[1, 2, 3, 4].map((item) => (
+                <div className="almez-loading__card" key={item}>
+                  <div className="almez-loading__image" />
+                  <div className="almez-loading__body">
+                    <div className="almez-loading__line almez-loading__line--title" />
+                    <div className="almez-loading__line" />
+                    <div className="almez-loading__line almez-loading__line--short" />
+                    <div className="almez-loading__action" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </main>
       }
