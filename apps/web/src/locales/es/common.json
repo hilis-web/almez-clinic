@@ -132,6 +132,8 @@
     "empty": "Todavía no hay secciones publicadas disponibles.",
     "viewSection": "Ver sección",
     "explore": "Explorar sección",
+    "loadingTitle": "Estamos preparando el contenido",
+    "loading": "Cargando categorías y elementos...",
     "loadingCategoryTitle": "Estamos preparando esta categoría",
     "loadingCategory": "Cargando los elementos de esta categoría...",
     "loadingItemTitle": "Estamos preparando el contenido",
