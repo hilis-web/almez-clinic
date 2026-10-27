@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import type { Prisma } from "../../generated/prisma/client";
+import { Prisma } from "../../generated/prisma/client";
 import { SectionContentStatus } from "../../generated/prisma/client";
 
 export async function getPublishedSections() {
@@ -269,4 +269,302 @@ export async function createSection(input: CreateSectionInput) {
   };
 
   return prisma.section.create({ data });
+}
+
+type UpdateSectionInput = {
+  title?: Prisma.InputJsonValue;
+  description?: Prisma.InputJsonValue;
+  imageUrl?: string | null;
+  status?: SectionContentStatus;
+  sortOrder?: number;
+};
+
+export async function updateSection(
+  id: string,
+  input: UpdateSectionInput,
+  actorId: string,
+  ipAddress: string | null,
+) {
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.section.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new Error("SECTION_NOT_FOUND");
+    }
+
+    const updated = await tx.section.update({
+      where: { id },
+      data: input,
+    });
+
+    await tx.auditLog.create({
+      data: {
+        actorId,
+        action: "SECTION_UPDATED",
+        entityType: "Section",
+        entityId: id,
+        ipAddress,
+        details: {
+          previousStatus: existing.status,
+          newStatus: updated.status,
+        },
+      },
+    });
+
+    return updated;
+  });
+}
+
+export async function deleteSection(
+  id: string,
+  actorId: string,
+  ipAddress: string | null,
+) {
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.section.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        status: true,
+      },
+    });
+
+    if (!existing) {
+      throw new Error("SECTION_NOT_FOUND");
+    }
+
+    await tx.auditLog.create({
+      data: {
+        actorId,
+        action: "SECTION_DELETED",
+        entityType: "Section",
+        entityId: id,
+        ipAddress,
+        details: {
+          title: existing.title,
+          previousStatus: existing.status,
+        },
+      },
+    });
+
+    await tx.section.delete({
+      where: { id },
+    });
+
+    return { id };
+  });
+}
+
+type UpdateCategoryInput = {
+  title?: Prisma.InputJsonValue;
+  description?: Prisma.InputJsonValue;
+  imageUrl?: string | null;
+  toolTip?: Prisma.InputJsonValue | null;
+  status?: SectionContentStatus;
+  sortOrder?: number;
+};
+
+export async function updateCategory(
+  id: string,
+  input: UpdateCategoryInput,
+  actorId: string,
+  ipAddress: string | null,
+) {
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.sectionCategory.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        sectionId: true,
+        status: true,
+      },
+    });
+
+    if (!existing) {
+      throw new Error("CATEGORY_NOT_FOUND");
+    }
+
+    const { toolTip, ...rest } = input;
+
+    const updated = await tx.sectionCategory.update({
+      where: { id },
+      data: {
+        ...rest,
+        ...(toolTip !== undefined
+          ? {
+              toolTip: toolTip === null ? Prisma.DbNull : toolTip,
+            }
+          : {}),
+      },
+    });
+
+    await tx.auditLog.create({
+      data: {
+        actorId,
+        action: "CATEGORY_UPDATED",
+        entityType: "SectionCategory",
+        entityId: id,
+        ipAddress,
+        details: {
+          sectionId: existing.sectionId,
+          previousStatus: existing.status,
+          newStatus: updated.status,
+        },
+      },
+    });
+
+    return updated;
+  });
+}
+
+export async function deleteCategory(
+  id: string,
+  actorId: string,
+  ipAddress: string | null,
+) {
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.sectionCategory.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        sectionId: true,
+        title: true,
+        status: true,
+      },
+    });
+
+    if (!existing) {
+      throw new Error("CATEGORY_NOT_FOUND");
+    }
+
+    await tx.auditLog.create({
+      data: {
+        actorId,
+        action: "CATEGORY_DELETED",
+        entityType: "SectionCategory",
+        entityId: id,
+        ipAddress,
+        details: {
+          sectionId: existing.sectionId,
+          title: existing.title,
+          previousStatus: existing.status,
+        },
+      },
+    });
+
+    await tx.sectionCategory.delete({
+      where: { id },
+    });
+
+    return { id };
+  });
+}
+
+type UpdateItemInput = {
+  title?: Prisma.InputJsonValue;
+  description?: Prisma.InputJsonValue;
+  content?: Prisma.InputJsonValue;
+  imageUrl?: string | null;
+  toolTip?: Prisma.InputJsonValue | null;
+  status?: SectionContentStatus;
+  sortOrder?: number;
+};
+
+export async function updateSectionItem(
+  id: string,
+  input: UpdateItemInput,
+  actorId: string,
+  ipAddress: string | null,
+) {
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.sectionItem.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        categoryId: true,
+        status: true,
+      },
+    });
+
+    if (!existing) {
+      throw new Error("ITEM_NOT_FOUND");
+    }
+
+    const { toolTip, ...rest } = input;
+
+    const updated = await tx.sectionItem.update({
+      where: { id },
+      data: {
+        ...rest,
+        ...(toolTip !== undefined
+          ? {
+              toolTip: toolTip === null ? Prisma.DbNull : toolTip,
+            }
+          : {}),
+      },
+    });
+
+    await tx.auditLog.create({
+      data: {
+        actorId,
+        action: "ITEM_UPDATED",
+        entityType: "SectionItem",
+        entityId: id,
+        ipAddress,
+        details: {
+          categoryId: existing.categoryId,
+          previousStatus: existing.status,
+          newStatus: updated.status,
+        },
+      },
+    });
+
+    return updated;
+  });
+}
+
+export async function deleteSectionItem(
+  id: string,
+  actorId: string,
+  ipAddress: string | null,
+) {
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.sectionItem.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        categoryId: true,
+        title: true,
+        status: true,
+      },
+    });
+
+    if (!existing) {
+      throw new Error("ITEM_NOT_FOUND");
+    }
+
+    await tx.auditLog.create({
+      data: {
+        actorId,
+        action: "ITEM_DELETED",
+        entityType: "SectionItem",
+        entityId: id,
+        ipAddress,
+        details: {
+          categoryId: existing.categoryId,
+          title: existing.title,
+          previousStatus: existing.status,
+        },
+      },
+    });
+
+    await tx.sectionItem.delete({
+      where: { id },
+    });
+
+    return { id };
+  });
 }

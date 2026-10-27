@@ -18,12 +18,22 @@ interface TranslatedText {
 interface ExistingItem {
   id: string;
   title: TranslatedText;
-  description?: TranslatedText;
+  description: TranslatedText;
+  content: TranslatedText;
+  imageUrl: string;
+  toolTip: TranslatedText;
+  status: ContentStatus;
+  sortOrder: number;
 }
 
 interface ExistingCategory {
   id: string;
   title: TranslatedText;
+  description: TranslatedText;
+  imageUrl: string;
+  toolTip: TranslatedText;
+  status: ContentStatus;
+  sortOrder: number;
   items: ExistingItem[];
 }
 
@@ -227,6 +237,52 @@ export default function SectionsPage() {
   const [pageNotice, setPageNotice] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [editingSection, setEditingSection] = useState<ExistingSection | null>(
+    null,
+  );
+
+  const [editTitle, setEditTitle] = useState<TranslatedText>(emptyTranslation);
+
+  const [editDescription, setEditDescription] =
+    useState<TranslatedText>(emptyTranslation);
+
+  const [editImageUrl, setEditImageUrl] = useState("");
+  const [editStatus, setEditStatus] = useState<ContentStatus>("UNPUBLISHED");
+
+  const [editSortOrder, setEditSortOrder] = useState("0");
+  const [editingCategory, setEditingCategory] = useState<{
+    sectionId: string;
+    category: ExistingCategory;
+  } | null>(null);
+  const [editCategoryTitle, setEditCategoryTitle] =
+    useState<TranslatedText>(emptyTranslation);
+  const [editCategoryDescription, setEditCategoryDescription] =
+    useState<TranslatedText>(emptyTranslation);
+  const [editCategoryImageUrl, setEditCategoryImageUrl] = useState("");
+  const [editCategoryToolTip, setEditCategoryToolTip] =
+    useState<TranslatedText>(emptyTranslation);
+  const [editCategoryStatus, setEditCategoryStatus] =
+    useState<ContentStatus>("UNPUBLISHED");
+  const [editCategorySortOrder, setEditCategorySortOrder] = useState("0");
+  const [editingItem, setEditingItem] = useState<{
+    sectionId: string;
+    categoryId: string;
+    item: ExistingItem;
+  } | null>(null);
+  const [editItemTitle, setEditItemTitle] =
+    useState<TranslatedText>(emptyTranslation);
+  const [editItemDescription, setEditItemDescription] =
+    useState<TranslatedText>(emptyTranslation);
+  const [editItemContent, setEditItemContent] =
+    useState<TranslatedText>(emptyTranslation);
+  const [editItemImageUrl, setEditItemImageUrl] = useState("");
+  const [editItemToolTip, setEditItemToolTip] =
+    useState<TranslatedText>(emptyTranslation);
+  const [editItemStatus, setEditItemStatus] =
+    useState<ContentStatus>("UNPUBLISHED");
+  const [editItemSortOrder, setEditItemSortOrder] = useState("0");
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState("");
 
   useEffect(() => {
     const token = sessionStorage.getItem("almez_admin_token");
@@ -266,11 +322,29 @@ export default function SectionsPage() {
             ? raw.categories.map((category: any) => ({
                 id: String(category.id),
                 title: localizedValue(category.title),
+                description: localizedValue(category.description),
+                imageUrl:
+                  typeof category.imageUrl === "string"
+                    ? category.imageUrl
+                    : "",
+                toolTip: localizedValue(category.toolTip),
+                status:
+                  category.status === "PUBLISHED" ? "PUBLISHED" : "UNPUBLISHED",
+                sortOrder: Number(category.sortOrder ?? 0),
                 items: Array.isArray(category.items)
                   ? category.items.map((item: any) => ({
                       id: String(item.id),
                       title: localizedValue(item.title),
                       description: localizedValue(item.description),
+                      content: localizedValue(item.content),
+                      imageUrl:
+                        typeof item.imageUrl === "string" ? item.imageUrl : "",
+                      toolTip: localizedValue(item.toolTip),
+                      status:
+                        item.status === "PUBLISHED"
+                          ? "PUBLISHED"
+                          : "UNPUBLISHED",
+                      sortOrder: Number(item.sortOrder ?? 0),
                     }))
                   : [],
               }))
@@ -395,6 +469,54 @@ export default function SectionsPage() {
       language === "en"
         ? "Existing record — it will not be modified."
         : "Registro existente: no se modificará.",
+    edit: language === "en" ? "Edit section" : "Editar sección",
+    publish: language === "en" ? "Publish" : "Publicar",
+    unpublish: language === "en" ? "Unpublish" : "Retirar publicación",
+    delete: language === "en" ? "Delete" : "Eliminar",
+    editTitle: language === "en" ? "Edit section" : "Editar sección",
+    sortOrder: language === "en" ? "Display order" : "Orden de visualización",
+    confirmDelete:
+      language === "en"
+        ? "Are you sure you want to delete this section? Its categories and items will also be deleted. This action cannot be undone."
+        : "¿Seguro que quieres eliminar esta sección? También se eliminarán sus categorías y elementos. Esta acción no se puede deshacer.",
+    editSuccess:
+      language === "en"
+        ? "Section updated successfully."
+        : "Sección actualizada correctamente.",
+    deleteSuccess:
+      language === "en"
+        ? "Section deleted successfully."
+        : "Sección eliminada correctamente.",
+    actionFailure:
+      language === "en"
+        ? "The operation failed. Please try again."
+        : "La operación ha fallado. Inténtalo de nuevo.",
+    editCategory: language === "en" ? "Edit category" : "Editar categoría",
+    editItem: language === "en" ? "Edit item" : "Editar elemento",
+    categoryEditSuccess:
+      language === "en"
+        ? "Category updated successfully."
+        : "Categoría actualizada correctamente.",
+    itemEditSuccess:
+      language === "en"
+        ? "Item updated successfully."
+        : "Elemento actualizado correctamente.",
+    confirmDeleteCategory:
+      language === "en"
+        ? "Delete this category and all its items? This action cannot be undone."
+        : "¿Eliminar esta categoría y todos sus elementos? Esta acción no se puede deshacer.",
+    confirmDeleteItem:
+      language === "en"
+        ? "Are you sure you want to delete this item? This action cannot be undone."
+        : "¿Seguro que quieres eliminar este elemento? Esta acción no se puede deshacer.",
+    categoryDeleteSuccess:
+      language === "en"
+        ? "Category deleted successfully."
+        : "Categoría eliminada correctamente.",
+    itemDeleteSuccess:
+      language === "en"
+        ? "Item deleted successfully."
+        : "Elemento eliminado correctamente.",
   };
 
   const selectedSection = existingSections.find(
@@ -430,6 +552,526 @@ export default function SectionsPage() {
     setPageNotice("");
     resetWizard();
     setWizardOpen(true);
+  }
+
+  function openEditSection(section: ExistingSection) {
+    setEditingSection(section);
+    setEditTitle({ ...section.title });
+    setEditDescription({ ...section.description });
+    setEditImageUrl(section.imageUrl);
+    setEditStatus(section.status);
+    setEditSortOrder(String(section.sortOrder));
+    setActionError("");
+    setPageNotice("");
+  }
+
+  async function refreshSections(token: string) {
+    const response = await fetch(`${API_BASE_URL}/api/sections/admin`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.status === 401) {
+      sessionStorage.removeItem("almez_admin_token");
+      sessionStorage.removeItem("almez_admin_user");
+      router.replace("/login");
+      throw new Error("AUTH_REQUIRED");
+    }
+
+    if (!response.ok) {
+      throw new Error(text.actionFailure);
+    }
+
+    const result = await response.json();
+    const rawSections = Array.isArray(result)
+      ? result
+      : (result.data ?? result.sections ?? []);
+
+    const normalized: ExistingSection[] = rawSections.map((raw: any) => ({
+      id: String(raw.id),
+      title: localizedValue(raw.title),
+      description: localizedValue(raw.description),
+      imageUrl: typeof raw.imageUrl === "string" ? raw.imageUrl : "",
+      status: raw.status === "PUBLISHED" ? "PUBLISHED" : "UNPUBLISHED",
+      sortOrder: Number(raw.sortOrder ?? 0),
+      categories: Array.isArray(raw.categories)
+        ? raw.categories.map((category: any) => ({
+            id: String(category.id),
+            title: localizedValue(category.title),
+            description: localizedValue(category.description),
+            imageUrl:
+              typeof category.imageUrl === "string" ? category.imageUrl : "",
+            toolTip: localizedValue(category.toolTip),
+            status:
+              category.status === "PUBLISHED" ? "PUBLISHED" : "UNPUBLISHED",
+            sortOrder: Number(category.sortOrder ?? 0),
+            items: Array.isArray(category.items)
+              ? category.items.map((item: any) => ({
+                  id: String(item.id),
+                  title: localizedValue(item.title),
+                  description: localizedValue(item.description),
+                  content: localizedValue(item.content),
+                  imageUrl:
+                    typeof item.imageUrl === "string" ? item.imageUrl : "",
+                  toolTip: localizedValue(item.toolTip),
+                  status:
+                    item.status === "PUBLISHED" ? "PUBLISHED" : "UNPUBLISHED",
+                  sortOrder: Number(item.sortOrder ?? 0),
+                }))
+              : [],
+          }))
+        : [],
+    }));
+
+    setExistingSections(normalized);
+  }
+
+  async function saveSectionChanges(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!editingSection || actionLoading) return;
+
+    if (
+      !editTitle.es.trim() ||
+      !editTitle.en.trim() ||
+      !editDescription.es.trim() ||
+      !editDescription.en.trim()
+    ) {
+      setActionError(text.validation);
+      return;
+    }
+
+    if (!isValidHttpUrl(editImageUrl)) {
+      setActionError(text.invalidUrl);
+      return;
+    }
+
+    const sortOrder = Number(editSortOrder);
+
+    if (!Number.isInteger(sortOrder)) {
+      setActionError(text.actionFailure);
+      return;
+    }
+
+    const token = sessionStorage.getItem("almez_admin_token");
+
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+
+    setActionLoading(true);
+    setActionError("");
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/sections/${editingSection.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: editTitle,
+            description: editDescription,
+            imageUrl: editImageUrl.trim() || null,
+            status: editStatus,
+            sortOrder,
+          }),
+        },
+      );
+
+      const result = await response.json().catch(() => ({}));
+
+      if (response.status === 401) {
+        sessionStorage.removeItem("almez_admin_token");
+        sessionStorage.removeItem("almez_admin_user");
+        router.replace("/login");
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(result.error || text.actionFailure);
+      }
+
+      await refreshSections(token);
+      setEditingSection(null);
+      setPageNotice(text.editSuccess);
+    } catch (error) {
+      if (error instanceof Error && error.message === "AUTH_REQUIRED") return;
+
+      setActionError(
+        error instanceof Error ? error.message : text.actionFailure,
+      );
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  function openEditCategory(sectionId: string, category: ExistingCategory) {
+    setEditingCategory({ sectionId, category });
+    setEditCategoryTitle({ ...category.title });
+    setEditCategoryDescription({ ...category.description });
+    setEditCategoryImageUrl(category.imageUrl);
+    setEditCategoryToolTip({ ...category.toolTip });
+    setEditCategoryStatus(category.status);
+    setEditCategorySortOrder(String(category.sortOrder));
+    setActionError("");
+    setPageNotice("");
+  }
+
+  function openEditItem(
+    sectionId: string,
+    categoryId: string,
+    item: ExistingItem,
+  ) {
+    setEditingItem({ sectionId, categoryId, item });
+    setEditItemTitle({ ...item.title });
+    setEditItemDescription({ ...item.description });
+    setEditItemContent({ ...item.content });
+    setEditItemImageUrl(item.imageUrl);
+    setEditItemToolTip({ ...item.toolTip });
+    setEditItemStatus(item.status);
+    setEditItemSortOrder(String(item.sortOrder));
+    setActionError("");
+    setPageNotice("");
+  }
+
+  async function saveCategoryChanges(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!editingCategory || actionLoading) return;
+    if (!editCategoryTitle.es.trim() || !editCategoryTitle.en.trim()) {
+      setActionError(text.validation);
+      return;
+    }
+    if (!isValidHttpUrl(editCategoryImageUrl)) {
+      setActionError(text.invalidUrl);
+      return;
+    }
+    const sortOrder = Number(editCategorySortOrder);
+    if (!Number.isInteger(sortOrder)) {
+      setActionError(text.actionFailure);
+      return;
+    }
+    const token = sessionStorage.getItem("almez_admin_token");
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+    setActionLoading(true);
+    setActionError("");
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/sections/categories/${editingCategory.category.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: editCategoryTitle,
+            description: editCategoryDescription,
+            imageUrl: editCategoryImageUrl.trim() || null,
+            toolTip: editCategoryToolTip,
+            status: editCategoryStatus,
+            sortOrder,
+          }),
+        },
+      );
+      const result = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        sessionStorage.removeItem("almez_admin_token");
+        sessionStorage.removeItem("almez_admin_user");
+        router.replace("/login");
+        return;
+      }
+      if (!response.ok) throw new Error(result.error || text.actionFailure);
+      await refreshSections(token);
+      setEditingCategory(null);
+      setPageNotice(text.categoryEditSuccess);
+    } catch (error) {
+      if (error instanceof Error && error.message === "AUTH_REQUIRED") return;
+      setActionError(
+        error instanceof Error ? error.message : text.actionFailure,
+      );
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function saveItemChanges(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!editingItem || actionLoading) return;
+    if (!editItemTitle.es.trim() || !editItemTitle.en.trim()) {
+      setActionError(text.validation);
+      return;
+    }
+    if (!isValidHttpUrl(editItemImageUrl)) {
+      setActionError(text.invalidUrl);
+      return;
+    }
+    const sortOrder = Number(editItemSortOrder);
+    if (!Number.isInteger(sortOrder)) {
+      setActionError(text.actionFailure);
+      return;
+    }
+    const token = sessionStorage.getItem("almez_admin_token");
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+    setActionLoading(true);
+    setActionError("");
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/sections/items/${editingItem.item.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: editItemTitle,
+            description: editItemDescription,
+            content: editItemContent,
+            imageUrl: editItemImageUrl.trim() || null,
+            toolTip: editItemToolTip,
+            status: editItemStatus,
+            sortOrder,
+          }),
+        },
+      );
+      const result = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        sessionStorage.removeItem("almez_admin_token");
+        sessionStorage.removeItem("almez_admin_user");
+        router.replace("/login");
+        return;
+      }
+      if (!response.ok) throw new Error(result.error || text.actionFailure);
+      await refreshSections(token);
+      setEditingItem(null);
+      setPageNotice(text.itemEditSuccess);
+    } catch (error) {
+      if (error instanceof Error && error.message === "AUTH_REQUIRED") return;
+      setActionError(
+        error instanceof Error ? error.message : text.actionFailure,
+      );
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function changeEntityStatus(
+    kind: "category" | "item",
+    id: string,
+    currentStatus: ContentStatus,
+  ) {
+    if (actionLoading) return;
+    const token = sessionStorage.getItem("almez_admin_token");
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+    setActionLoading(true);
+    setActionError("");
+    try {
+      const path = kind === "category" ? "categories" : "items";
+      const response = await fetch(
+        `${API_BASE_URL}/api/sections/${path}/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            status: currentStatus === "PUBLISHED" ? "UNPUBLISHED" : "PUBLISHED",
+          }),
+        },
+      );
+      const result = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        sessionStorage.removeItem("almez_admin_token");
+        sessionStorage.removeItem("almez_admin_user");
+        router.replace("/login");
+        return;
+      }
+      if (!response.ok) throw new Error(result.error || text.actionFailure);
+      await refreshSections(token);
+      setPageNotice(
+        currentStatus === "PUBLISHED" ? text.unpublish : text.publish,
+      );
+    } catch (error) {
+      if (error instanceof Error && error.message === "AUTH_REQUIRED") return;
+      setPageNotice(
+        error instanceof Error ? error.message : text.actionFailure,
+      );
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function deleteEntity(kind: "category" | "item", id: string) {
+    if (actionLoading) return;
+    const confirmText =
+      kind === "category" ? text.confirmDeleteCategory : text.confirmDeleteItem;
+    if (!window.confirm(confirmText)) return;
+    const token = sessionStorage.getItem("almez_admin_token");
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+    setActionLoading(true);
+    setPageNotice("");
+    try {
+      const path = kind === "category" ? "categories" : "items";
+      const response = await fetch(
+        `${API_BASE_URL}/api/sections/${path}/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const result = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        sessionStorage.removeItem("almez_admin_token");
+        sessionStorage.removeItem("almez_admin_user");
+        router.replace("/login");
+        return;
+      }
+      if (!response.ok) throw new Error(result.error || text.actionFailure);
+      await refreshSections(token);
+      setPageNotice(
+        kind === "category"
+          ? text.categoryDeleteSuccess
+          : text.itemDeleteSuccess,
+      );
+    } catch (error) {
+      if (error instanceof Error && error.message === "AUTH_REQUIRED") return;
+      setPageNotice(
+        error instanceof Error ? error.message : text.actionFailure,
+      );
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function toggleSectionStatus(section: ExistingSection) {
+    if (actionLoading) return;
+
+    const token = sessionStorage.getItem("almez_admin_token");
+
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+
+    setActionLoading(true);
+    setActionError("");
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/sections/${section.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            status:
+              section.status === "PUBLISHED" ? "UNPUBLISHED" : "PUBLISHED",
+          }),
+        },
+      );
+
+      const responseText = await response.text();
+
+      let result: { error?: string } = {};
+
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        // The response is not JSON.
+      }
+
+      if (response.status === 401) {
+        sessionStorage.removeItem("almez_admin_token");
+        sessionStorage.removeItem("almez_admin_user");
+        router.replace("/login");
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(result.error || text.actionFailure);
+      }
+
+      await refreshSections(token);
+      setPageNotice(
+        section.status === "PUBLISHED" ? text.unpublish : text.editSuccess,
+      );
+    } catch (error) {
+      if (error instanceof Error && error.message === "AUTH_REQUIRED") return;
+
+      setPageNotice(
+        error instanceof Error ? error.message : text.actionFailure,
+      );
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function deleteSectionRecord(section: ExistingSection) {
+    if (actionLoading) return;
+
+    if (!window.confirm(text.confirmDelete)) return;
+
+    const token = sessionStorage.getItem("almez_admin_token");
+
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+
+    setActionLoading(true);
+    setPageNotice("");
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/sections/${section.id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      const result = await response.json().catch(() => ({}));
+
+      if (response.status === 401) {
+        sessionStorage.removeItem("almez_admin_token");
+        sessionStorage.removeItem("almez_admin_user");
+        router.replace("/login");
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(result.error || text.actionFailure);
+      }
+
+      await refreshSections(token);
+      setPageNotice(text.deleteSuccess);
+    } catch (error) {
+      if (error instanceof Error && error.message === "AUTH_REQUIRED") return;
+
+      setPageNotice(
+        error instanceof Error ? error.message : text.actionFailure,
+      );
+    } finally {
+      setActionLoading(false);
+    }
   }
 
   function closeWizard() {
@@ -708,11 +1350,33 @@ export default function SectionsPage() {
                 ? raw.categories.map((category: any) => ({
                     id: String(category.id),
                     title: localizedValue(category.title),
+                    description: localizedValue(category.description),
+                    imageUrl:
+                      typeof category.imageUrl === "string"
+                        ? category.imageUrl
+                        : "",
+                    toolTip: localizedValue(category.toolTip),
+                    status:
+                      category.status === "PUBLISHED"
+                        ? "PUBLISHED"
+                        : "UNPUBLISHED",
+                    sortOrder: Number(category.sortOrder ?? 0),
                     items: Array.isArray(category.items)
                       ? category.items.map((item: any) => ({
                           id: String(item.id),
                           title: localizedValue(item.title),
                           description: localizedValue(item.description),
+                          content: localizedValue(item.content),
+                          imageUrl:
+                            typeof item.imageUrl === "string"
+                              ? item.imageUrl
+                              : "",
+                          toolTip: localizedValue(item.toolTip),
+                          status:
+                            item.status === "PUBLISHED"
+                              ? "PUBLISHED"
+                              : "UNPUBLISHED",
+                          sortOrder: Number(item.sortOrder ?? 0),
                         }))
                       : [],
                   }))
@@ -918,27 +1582,128 @@ export default function SectionsPage() {
                                           key={category.id}
                                           className="rounded-lg bg-[#f8faf8] p-3"
                                         >
-                                          <p className="text-sm font-semibold text-[#1b3b36]">
-                                            {category.title[language] ||
-                                              category.title.en ||
-                                              category.title.es ||
-                                              (language === "en"
-                                                ? "Untitled category"
-                                                : "Categoría sin título")}
-                                          </p>
+                                          <div className="flex flex-wrap items-start justify-between gap-2">
+                                            <div className="min-w-0">
+                                              <p className="text-sm font-semibold text-[#1b3b36]">
+                                                {category.title[language] ||
+                                                  category.title.en ||
+                                                  category.title.es ||
+                                                  (language === "en"
+                                                    ? "Untitled category"
+                                                    : "Categoría sin título")}
+                                              </p>
+                                              <p className="mt-1 text-xs text-[#758078]">
+                                                {category.status === "PUBLISHED"
+                                                  ? text.published
+                                                  : text.unpublished}
+                                              </p>
+                                            </div>
+                                            <div className="flex flex-wrap gap-1.5">
+                                              <button
+                                                type="button"
+                                                disabled={actionLoading}
+                                                onClick={() =>
+                                                  openEditCategory(
+                                                    section.id,
+                                                    category,
+                                                  )
+                                                }
+                                                className="rounded-lg border border-[#cbd8cd] px-2.5 py-1.5 text-xs font-semibold text-[#1b3b36] disabled:opacity-50"
+                                              >
+                                                {text.editCategory}
+                                              </button>
+                                              <button
+                                                type="button"
+                                                disabled={actionLoading}
+                                                onClick={() =>
+                                                  void changeEntityStatus(
+                                                    "category",
+                                                    category.id,
+                                                    category.status,
+                                                  )
+                                                }
+                                                className="rounded-lg border border-[#cbd8cd] px-2.5 py-1.5 text-xs font-semibold text-[#496e5a] disabled:opacity-50"
+                                              >
+                                                {category.status === "PUBLISHED"
+                                                  ? text.unpublish
+                                                  : text.publish}
+                                              </button>
+                                              <button
+                                                type="button"
+                                                disabled={actionLoading}
+                                                onClick={() =>
+                                                  void deleteEntity(
+                                                    "category",
+                                                    category.id,
+                                                  )
+                                                }
+                                                className="rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-semibold text-red-700 disabled:opacity-50"
+                                              >
+                                                {text.delete}
+                                              </button>
+                                            </div>
+                                          </div>
                                           {category.items.length ? (
-                                            <ul className="mt-2 space-y-1 border-l-2 border-[#d7e4d9] pl-3">
+                                            <ul className="mt-3 space-y-2 border-l-2 border-[#d7e4d9] pl-3">
                                               {category.items.map((item) => (
                                                 <li
                                                   key={item.id}
-                                                  className="text-sm text-[#59665d]"
+                                                  className="flex flex-wrap items-center justify-between gap-2 text-sm text-[#59665d]"
                                                 >
-                                                  {item.title[language] ||
-                                                    item.title.en ||
-                                                    item.title.es ||
-                                                    (language === "en"
-                                                      ? "Untitled item"
-                                                      : "Elemento sin título")}
+                                                  <span>
+                                                    {item.title[language] ||
+                                                      item.title.en ||
+                                                      item.title.es ||
+                                                      (language === "en"
+                                                        ? "Untitled item"
+                                                        : "Elemento sin título")}
+                                                  </span>
+                                                  <span className="flex flex-wrap gap-1.5">
+                                                    <button
+                                                      type="button"
+                                                      disabled={actionLoading}
+                                                      onClick={() =>
+                                                        openEditItem(
+                                                          section.id,
+                                                          category.id,
+                                                          item,
+                                                        )
+                                                      }
+                                                      className="rounded-md border border-[#cbd8cd] px-2 py-1 text-xs font-semibold text-[#1b3b36] disabled:opacity-50"
+                                                    >
+                                                      {text.editItem}
+                                                    </button>
+                                                    <button
+                                                      type="button"
+                                                      disabled={actionLoading}
+                                                      onClick={() =>
+                                                        void changeEntityStatus(
+                                                          "item",
+                                                          item.id,
+                                                          item.status,
+                                                        )
+                                                      }
+                                                      className="rounded-md border border-[#cbd8cd] px-2 py-1 text-xs font-semibold text-[#496e5a] disabled:opacity-50"
+                                                    >
+                                                      {item.status ===
+                                                      "PUBLISHED"
+                                                        ? text.unpublish
+                                                        : text.publish}
+                                                    </button>
+                                                    <button
+                                                      type="button"
+                                                      disabled={actionLoading}
+                                                      onClick={() =>
+                                                        void deleteEntity(
+                                                          "item",
+                                                          item.id,
+                                                        )
+                                                      }
+                                                      className="rounded-md border border-red-200 px-2 py-1 text-xs font-semibold text-red-700 disabled:opacity-50"
+                                                    >
+                                                      {text.delete}
+                                                    </button>
+                                                  </span>
                                                 </li>
                                               ))}
                                             </ul>
@@ -954,15 +1719,58 @@ export default function SectionsPage() {
                                     </div>
                                   )}
                                 </details>
-                                <button
-                                  type="button"
-                                  onClick={openWizard}
-                                  className="mt-4 rounded-xl border border-[#cbd8cd] px-3.5 py-2 text-sm font-semibold text-[#1b3b36] transition hover:bg-[#edf5ee]"
-                                >
-                                  {language === "en"
-                                    ? "Add content"
-                                    : "Añadir contenido"}
-                                </button>
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                  <button
+                                    type="button"
+                                    disabled={actionLoading}
+                                    onClick={() => openEditSection(section)}
+                                    className="rounded-xl border border-[#cbd8cd] px-3.5 py-2 text-sm font-semibold text-[#1b3b36] transition hover:bg-[#edf5ee] disabled:opacity-50"
+                                  >
+                                    {text.edit}
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    disabled={actionLoading}
+                                    onClick={() =>
+                                      void toggleSectionStatus(section)
+                                    }
+                                    className="rounded-xl border border-[#cbd8cd] px-3.5 py-2 text-sm font-semibold text-[#496e5a] transition hover:bg-[#edf5ee] disabled:opacity-50"
+                                  >
+                                    {published ? text.unpublish : text.publish}
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    disabled={actionLoading}
+                                    onClick={() =>
+                                      void deleteSectionRecord(section)
+                                    }
+                                    className="rounded-xl border border-red-200 px-3.5 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50 disabled:opacity-50"
+                                  >
+                                    {text.delete}
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedSectionId(section.id);
+                                      setSectionMode("existing");
+                                      setCategoryMode("new");
+                                      setSelectedCategoryId("");
+                                      setPageNotice("");
+                                      resetWizard();
+                                      setSectionMode("existing");
+                                      setSelectedSectionId(section.id);
+                                      setWizardOpen(true);
+                                    }}
+                                    className="rounded-xl bg-[#1b3b36] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-[#17312d]"
+                                  >
+                                    {language === "en"
+                                      ? "Add content"
+                                      : "Añadir contenido"}
+                                  </button>
+                                </div>
                               </div>
                             </article>
                           );
@@ -1668,6 +2476,420 @@ export default function SectionsPage() {
                       : text.save}
                   </button>
                 )}
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
+
+      {editingSection && (
+        <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-[#10221f]/50 p-3 backdrop-blur-sm sm:p-6">
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-section-title"
+            className="my-4 w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl"
+          >
+            <div className="flex items-center justify-between gap-4 border-b border-[#e3e8e3] px-5 py-5 sm:px-8">
+              <h2
+                id="edit-section-title"
+                className="font-heading text-2xl font-semibold text-[#1b3b36]"
+              >
+                {text.editTitle}
+              </h2>
+
+              <button
+                type="button"
+                disabled={actionLoading}
+                onClick={() => setEditingSection(null)}
+                className="rounded-lg px-3 py-1 text-2xl text-[#758078] hover:bg-[#f1f5f0] disabled:opacity-50"
+                aria-label={language === "en" ? "Close" : "Cerrar"}
+              >
+                ×
+              </button>
+            </div>
+
+            <form onSubmit={saveSectionChanges}>
+              <div className="max-h-[65vh] space-y-5 overflow-y-auto px-5 py-6 sm:px-8">
+                <TranslationFields
+                  label={text.titleLabel}
+                  value={editTitle}
+                  onChange={(locale, value) =>
+                    setEditTitle((current) => ({
+                      ...current,
+                      [locale]: value,
+                    }))
+                  }
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  required
+                />
+
+                <TranslationFields
+                  label={text.description}
+                  value={editDescription}
+                  onChange={(locale, value) =>
+                    setEditDescription((current) => ({
+                      ...current,
+                      [locale]: value,
+                    }))
+                  }
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  multiline
+                  required
+                />
+
+                <label className={labelClass}>
+                  {text.image}
+                  <input
+                    type="url"
+                    value={editImageUrl}
+                    onChange={(event) => setEditImageUrl(event.target.value)}
+                    className={inputClass}
+                    placeholder="https://..."
+                  />
+                </label>
+
+                <label className={labelClass}>
+                  {text.sortOrder}
+                  <input
+                    type="number"
+                    step="1"
+                    value={editSortOrder}
+                    onChange={(event) => setEditSortOrder(event.target.value)}
+                    className={inputClass}
+                    required
+                  />
+                </label>
+
+                <StatusField
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  value={editStatus}
+                  onChange={setEditStatus}
+                />
+
+                {actionError && (
+                  <p
+                    role="alert"
+                    className="rounded-xl bg-red-50 p-4 text-sm leading-6 text-red-700"
+                  >
+                    {actionError}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col-reverse justify-between gap-3 border-t border-[#e3e8e3] bg-[#fbfcfb] px-5 py-4 sm:flex-row sm:px-8">
+                <button
+                  type="button"
+                  disabled={actionLoading}
+                  onClick={() => setEditingSection(null)}
+                  className="rounded-xl border border-[#e3e8e3] px-5 py-3 text-sm font-semibold text-[#1b3b36] transition hover:bg-[#f1f5f0] disabled:opacity-50"
+                >
+                  {text.cancel}
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={actionLoading}
+                  className="rounded-xl bg-[#1b3b36] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#17312d] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {actionLoading
+                    ? language === "en"
+                      ? "Saving…"
+                      : "Guardando…"
+                    : text.save}
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
+
+      {editingCategory && (
+        <div className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-[#10221f]/50 p-3 backdrop-blur-sm sm:p-6">
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-category-title"
+            className="my-4 w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl"
+          >
+            <div className="flex items-center justify-between gap-4 border-b border-[#e3e8e3] px-5 py-5 sm:px-8">
+              <h2
+                id="edit-category-title"
+                className="font-heading text-2xl font-semibold text-[#1b3b36]"
+              >
+                {text.editCategory}
+              </h2>
+              <button
+                type="button"
+                disabled={actionLoading}
+                onClick={() => setEditingCategory(null)}
+                className="rounded-lg px-3 py-1 text-2xl text-[#758078] hover:bg-[#f1f5f0] disabled:opacity-50"
+                aria-label={language === "en" ? "Close" : "Cerrar"}
+              >
+                ×
+              </button>
+            </div>
+            <form onSubmit={saveCategoryChanges}>
+              <div className="max-h-[65vh] space-y-5 overflow-y-auto px-5 py-6 sm:px-8">
+                <TranslationFields
+                  label={text.titleLabel}
+                  value={editCategoryTitle}
+                  onChange={(locale, value) =>
+                    setEditCategoryTitle((current) => ({
+                      ...current,
+                      [locale]: value,
+                    }))
+                  }
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  required
+                />
+                <TranslationFields
+                  label={text.description}
+                  value={editCategoryDescription}
+                  onChange={(locale, value) =>
+                    setEditCategoryDescription((current) => ({
+                      ...current,
+                      [locale]: value,
+                    }))
+                  }
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  multiline
+                />
+                <label className={labelClass}>
+                  {text.image}
+                  <input
+                    type="url"
+                    value={editCategoryImageUrl}
+                    onChange={(event) =>
+                      setEditCategoryImageUrl(event.target.value)
+                    }
+                    className={inputClass}
+                    placeholder="https://..."
+                  />
+                </label>
+                <TranslationFields
+                  label={text.tooltip}
+                  value={editCategoryToolTip}
+                  onChange={(locale, value) =>
+                    setEditCategoryToolTip((current) => ({
+                      ...current,
+                      [locale]: value,
+                    }))
+                  }
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  multiline
+                />
+                <label className={labelClass}>
+                  {text.sortOrder}
+                  <input
+                    type="number"
+                    step="1"
+                    value={editCategorySortOrder}
+                    onChange={(event) =>
+                      setEditCategorySortOrder(event.target.value)
+                    }
+                    className={inputClass}
+                    required
+                  />
+                </label>
+                <StatusField
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  value={editCategoryStatus}
+                  onChange={setEditCategoryStatus}
+                />
+                {actionError && (
+                  <p
+                    role="alert"
+                    className="rounded-xl bg-red-50 p-4 text-sm leading-6 text-red-700"
+                  >
+                    {actionError}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col-reverse justify-between gap-3 border-t border-[#e3e8e3] bg-[#fbfcfb] px-5 py-4 sm:flex-row sm:px-8">
+                <button
+                  type="button"
+                  disabled={actionLoading}
+                  onClick={() => setEditingCategory(null)}
+                  className="rounded-xl border border-[#e3e8e3] px-5 py-3 text-sm font-semibold text-[#1b3b36] disabled:opacity-50"
+                >
+                  {text.cancel}
+                </button>
+                <button
+                  type="submit"
+                  disabled={actionLoading}
+                  className="rounded-xl bg-[#1b3b36] px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
+                >
+                  {actionLoading
+                    ? language === "en"
+                      ? "Saving…"
+                      : "Guardando…"
+                    : text.save}
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
+
+      {editingItem && (
+        <div className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-[#10221f]/50 p-3 backdrop-blur-sm sm:p-6">
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-item-title"
+            className="my-4 w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl"
+          >
+            <div className="flex items-center justify-between gap-4 border-b border-[#e3e8e3] px-5 py-5 sm:px-8">
+              <h2
+                id="edit-item-title"
+                className="font-heading text-2xl font-semibold text-[#1b3b36]"
+              >
+                {text.editItem}
+              </h2>
+              <button
+                type="button"
+                disabled={actionLoading}
+                onClick={() => setEditingItem(null)}
+                className="rounded-lg px-3 py-1 text-2xl text-[#758078] hover:bg-[#f1f5f0] disabled:opacity-50"
+                aria-label={language === "en" ? "Close" : "Cerrar"}
+              >
+                ×
+              </button>
+            </div>
+            <form onSubmit={saveItemChanges}>
+              <div className="max-h-[65vh] space-y-5 overflow-y-auto px-5 py-6 sm:px-8">
+                <TranslationFields
+                  label={text.titleLabel}
+                  value={editItemTitle}
+                  onChange={(locale, value) =>
+                    setEditItemTitle((current) => ({
+                      ...current,
+                      [locale]: value,
+                    }))
+                  }
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  required
+                />
+                <TranslationFields
+                  label={text.description}
+                  value={editItemDescription}
+                  onChange={(locale, value) =>
+                    setEditItemDescription((current) => ({
+                      ...current,
+                      [locale]: value,
+                    }))
+                  }
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  multiline
+                />
+                <TranslationFields
+                  label={text.content}
+                  value={editItemContent}
+                  onChange={(locale, value) =>
+                    setEditItemContent((current) => ({
+                      ...current,
+                      [locale]: value,
+                    }))
+                  }
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  multiline
+                />
+                <label className={labelClass}>
+                  {text.image}
+                  <input
+                    type="url"
+                    value={editItemImageUrl}
+                    onChange={(event) =>
+                      setEditItemImageUrl(event.target.value)
+                    }
+                    className={inputClass}
+                    placeholder="https://..."
+                  />
+                </label>
+                <TranslationFields
+                  label={text.tooltip}
+                  value={editItemToolTip}
+                  onChange={(locale, value) =>
+                    setEditItemToolTip((current) => ({
+                      ...current,
+                      [locale]: value,
+                    }))
+                  }
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  multiline
+                />
+                <label className={labelClass}>
+                  {text.sortOrder}
+                  <input
+                    type="number"
+                    step="1"
+                    value={editItemSortOrder}
+                    onChange={(event) =>
+                      setEditItemSortOrder(event.target.value)
+                    }
+                    className={inputClass}
+                    required
+                  />
+                </label>
+                <StatusField
+                  text={text}
+                  inputClass={inputClass}
+                  labelClass={labelClass}
+                  value={editItemStatus}
+                  onChange={setEditItemStatus}
+                />
+                {actionError && (
+                  <p
+                    role="alert"
+                    className="rounded-xl bg-red-50 p-4 text-sm leading-6 text-red-700"
+                  >
+                    {actionError}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col-reverse justify-between gap-3 border-t border-[#e3e8e3] bg-[#fbfcfb] px-5 py-4 sm:flex-row sm:px-8">
+                <button
+                  type="button"
+                  disabled={actionLoading}
+                  onClick={() => setEditingItem(null)}
+                  className="rounded-xl border border-[#e3e8e3] px-5 py-3 text-sm font-semibold text-[#1b3b36] disabled:opacity-50"
+                >
+                  {text.cancel}
+                </button>
+                <button
+                  type="submit"
+                  disabled={actionLoading}
+                  className="rounded-xl bg-[#1b3b36] px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
+                >
+                  {actionLoading
+                    ? language === "en"
+                      ? "Saving…"
+                      : "Guardando…"
+                    : text.save}
+                </button>
               </div>
             </form>
           </section>
