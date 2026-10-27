@@ -384,13 +384,13 @@ export default function SiteHeader() {
             >
               {translate("navigation.contact", "Contacto")}
             </a>
-            <a
+            {/* <a
               href="/#contact"
               className="almez-header__appointment-link"
               onClick={closeMenu}
             >
               {translate("navigation.bookAppointment", "Reservar una cita")}
-            </a>
+            </a> */}
           </div>
         </nav>
       </header>
