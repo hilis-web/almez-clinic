@@ -44,9 +44,9 @@ export default function AboutClinic() {
             )}
           </p>
 
-          <a href="#contact" className="almez-about__link">
+          <a className="almez-about__link" href="#inline-consultation-form">
             {translate("about.cta", "Solicitar una consulta")}
-            <span aria-hidden="true"> →</span>
+            <span aria-hidden="true">↗</span>
           </a>
         </div>
 

@@ -94,7 +94,7 @@ export default function SiteFooter() {
     { key: "team", href: "/#team" },
     { key: "sections", href: "" },
     { key: "contact", href: "/#contact" },
-    { key: "bookAppointment", href: "/#contact" },
+    // { key: "bookAppointment", href: "/#contact" },
   ];
 
   const legalLinks: {
@@ -181,7 +181,7 @@ export default function SiteFooter() {
                     treatments: "Tratamientos",
                     team: "Nuestro equipo",
                     contact: "Contacto",
-                    bookAppointment: "Reservar una cita",
+                    // bookAppointment: "Reservar una cita",
                   };
 
                   const translationKeys: Record<string, string> = {
@@ -191,7 +191,7 @@ export default function SiteFooter() {
                     treatments: "navigation.treatments",
                     team: "navigation.team",
                     contact: "navigation.contact",
-                    bookAppointment: "navigation.bookAppointment",
+                    // bookAppointment: "navigation.bookAppointment",
                   };
 
                   return (
