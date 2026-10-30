@@ -12,7 +12,9 @@
     "pathologies": "Pathologies",
     "treatments": "Treatments",
     "contact": "Contact",
-    "bookAppointment": "Book an appointment"
+    "bookAppointment": "Book an appointment",
+    "explore": "Explore",
+    "viewAll": "View All"
   },
   "consultation": {
     "title": "Request a consultation",

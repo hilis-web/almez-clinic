@@ -12,7 +12,9 @@
     "pathologies": "Patologías",
     "treatments": "Tratamientos",
     "contact": "Contacto",
-    "bookAppointment": "Reservar una cita"
+    "bookAppointment": "Reservar una cita",
+    "explore": "Explorar",
+    "viewAll": "Ver Todo"
   },
   "consultation": {
     "title": "Solicitar una consulta",
