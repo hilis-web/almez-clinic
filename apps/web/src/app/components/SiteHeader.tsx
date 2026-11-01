@@ -66,6 +66,9 @@ export default function SiteHeader() {
   const language =
     i18n.resolvedLanguage?.split("-")[0] || i18n.language.split("-")[0] || "es";
 
+  // Keep the current language in every internal navigation URL.
+  const localizedPath = (path: string) => `/${language}${path}`;
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -152,7 +155,7 @@ export default function SiteHeader() {
     return (
       <>
         <Link
-          href={`/sections/${section.id}`}
+          href={localizedPath(`/sections/${section.id}`)}
           className="almez-mobile-menu__section-link"
           onClick={closeMenu}
         >
@@ -164,7 +167,7 @@ export default function SiteHeader() {
         )}
 
         <Link
-          href={`/sections/${section.id}`}
+          href={localizedPath(`/sections/${section.id}`)}
           className="almez-mobile-menu__view-all"
           onClick={closeMenu}
         >
@@ -180,7 +183,9 @@ export default function SiteHeader() {
           return (
             <div className="almez-mobile-menu__category" key={category.id}>
               <Link
-                href={`/sections/${section.id}/categories/${category.id}`}
+                href={localizedPath(
+                  `/sections/${section.id}/categories/${category.id}`,
+                )}
                 className="almez-mobile-menu__category-link"
                 onClick={closeMenu}
               >
@@ -192,7 +197,9 @@ export default function SiteHeader() {
                   {items.map((item) => (
                     <li key={item.id}>
                       <Link
-                        href={`/sections/${section.id}/categories/${category.id}/items/${item.id}`}
+                        href={localizedPath(
+                          `/sections/${section.id}/categories/${category.id}/items/${item.id}`,
+                        )}
                         onClick={closeMenu}
                       >
                         {getLocalizedText(item.title, language)}
@@ -262,7 +269,7 @@ export default function SiteHeader() {
 
             <div className="almez-header__brand-copy">
               <Link
-                href="/"
+                href={localizedPath("/")}
                 className="almez-header__brand-name"
                 onClick={closeMenu}
               >
@@ -335,7 +342,7 @@ export default function SiteHeader() {
         >
           <div className="almez-header__navigation-inner">
             <Link
-              href="/"
+              href={localizedPath("/")}
               className="almez-header__nav-link"
               onClick={closeMenu}
             >
@@ -343,7 +350,7 @@ export default function SiteHeader() {
             </Link>
 
             <a
-              href="/#team"
+              href={localizedPath("/#team")}
               className="almez-header__nav-link"
               onClick={closeMenu}
             >
@@ -385,7 +392,7 @@ export default function SiteHeader() {
                     <div className="almez-mega__trigger-group">
                       <div className="almez-mega__item">
                         <Link
-                          href={`/sections/${section.id}`}
+                          href={localizedPath(`/sections/${section.id}`)}
                           className="almez-header__nav-link almez-mega__section-link"
                           onClick={closeMenu}
                         >
@@ -413,7 +420,7 @@ export default function SiteHeader() {
                               </p>
                             )}
                             <Link
-                              href={`/sections/${section.id}`}
+                              href={localizedPath(`/sections/${section.id}`)}
                               className="almez-mega__view-all"
                               onClick={closeMenu}
                             >
@@ -444,7 +451,9 @@ export default function SiteHeader() {
                                     className="almez-mega__category"
                                   >
                                     <Link
-                                      href={`/sections/${section.id}/categories/${category.id}`}
+                                      href={localizedPath(
+                                        `/sections/${section.id}/categories/${category.id}`,
+                                      )}
                                       className="almez-mega__category-title"
                                       onClick={closeMenu}
                                     >
@@ -454,7 +463,9 @@ export default function SiteHeader() {
                                       {items.slice(0, 5).map((item) => (
                                         <li key={item.id}>
                                           <Link
-                                            href={`/sections/${section.id}/categories/${category.id}/items/${item.id}`}
+                                            href={localizedPath(
+                                              `/sections/${section.id}/categories/${category.id}/items/${item.id}`,
+                                            )}
                                             className="almez-mega__item-link"
                                             onClick={closeMenu}
                                           >
@@ -468,7 +479,9 @@ export default function SiteHeader() {
                                     </ul>
                                     {items.length > 5 && (
                                       <Link
-                                        href={`/sections/${section.id}/categories/${category.id}`}
+                                        href={localizedPath(
+                                          `/sections/${section.id}/categories/${category.id}`,
+                                        )}
                                         className="almez-mega__more"
                                         onClick={closeMenu}
                                       >
@@ -488,7 +501,7 @@ export default function SiteHeader() {
             )}
 
             <a
-              href="/#contact"
+              href={localizedPath("/#contact")}
               className="almez-header__nav-link"
               onClick={closeMenu}
             >
@@ -535,14 +548,14 @@ export default function SiteHeader() {
 
         <nav aria-label={translate("navigation.mainLabel", "Main navigation")}>
           <Link
-            href="/"
+            href={localizedPath("/")}
             className="almez-mobile-menu__link"
             onClick={closeMenu}
           >
             {translate("navigation.home", "Inicio")}
           </Link>
           <a
-            href="/#team"
+            href={localizedPath("/#team")}
             className="almez-mobile-menu__link"
             onClick={closeMenu}
           >
@@ -561,7 +574,7 @@ export default function SiteHeader() {
                 <div className="almez-mobile-menu__section" key={section.id}>
                   <div className="almez-mobile-menu__section-row">
                     <Link
-                      href={`/sections/${section.id}`}
+                      href={localizedPath(`/sections/${section.id}`)}
                       className="almez-mobile-menu__link"
                       onClick={closeMenu}
                     >
@@ -599,7 +612,7 @@ export default function SiteHeader() {
           )}
 
           <a
-            href="/#contact"
+            href={localizedPath("/#contact")}
             className="almez-mobile-menu__link"
             onClick={closeMenu}
           >

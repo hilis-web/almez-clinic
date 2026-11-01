@@ -1,9 +1,5 @@
-import ConsultationForm from "../components/ConsultationForm";
+import { redirect } from "next/navigation";
 
 export default function ConsultationPage() {
-  return (
-    <main className="min-h-screen bg-gray-50">
-      <ConsultationForm />
-    </main>
-  );
+  redirect("/es/consultation");
 }

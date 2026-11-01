@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
@@ -37,6 +37,11 @@ interface Section {
   categories: SectionCategory[];
 }
 
+interface CategoryPageProps {
+  initialSection?: Section;
+  initialCategory?: SectionCategory;
+}
+
 function getLocalizedText(
   value: LocalizedText | string | null | undefined,
   language: string,
@@ -54,14 +59,25 @@ function getLocalizedText(
   );
 }
 
-function CategoryPageContent() {
-  const params = useParams<{ id: string; categoryId: string }>();
+function CategoryPageContent({
+  initialSection,
+  initialCategory,
+}: CategoryPageProps) {
+  const params = useParams<{
+    id: string;
+    categoryId: string;
+    locale?: string;
+  }>();
   const router = useRouter();
   const { t, i18n } = useTranslation();
 
-  const [section, setSection] = useState<Section | null>(null);
-  const [category, setCategory] = useState<SectionCategory | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [section, setSection] = useState<Section | null>(
+    initialSection ?? null,
+  );
+  const [category, setCategory] = useState<SectionCategory | null>(
+    initialCategory ?? null,
+  );
+  const [loading, setLoading] = useState(!initialSection || !initialCategory);
   const [error, setError] = useState(false);
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
 
@@ -69,11 +85,19 @@ function CategoryPageContent() {
   const categoryId = params.categoryId;
 
   const language =
-    i18n.resolvedLanguage?.split("-")[0] || i18n.language.split("-")[0];
+    params.locale === "en" || params.locale === "es"
+      ? params.locale
+      : i18n.resolvedLanguage?.split("-")[0] || "es";
 
   useEffect(() => {
     if (!sectionId || !categoryId) return;
-
+    if (initialSection && initialCategory) {
+      setSection(initialSection);
+      setCategory(initialCategory);
+      setLoading(false);
+      setError(false);
+      return;
+    }
     let cancelled = false;
 
     async function loadCategory() {
@@ -130,7 +154,7 @@ function CategoryPageContent() {
     return () => {
       cancelled = true;
     };
-  }, [sectionId, categoryId]);
+  }, [sectionId, categoryId, initialSection, initialCategory]);
 
   if (loading) {
     return (
@@ -193,7 +217,7 @@ function CategoryPageContent() {
           <button
             type="button"
             className="almez-section-page__back"
-            onClick={() => router.push(`/sections/${sectionId}`)}
+            onClick={() => router.push(`/${language}/sections/${sectionId}`)}
           >
             <span aria-hidden="true">←</span>
             {t("sections.backToSection", "Back to section")}
@@ -219,7 +243,7 @@ function CategoryPageContent() {
           <button
             type="button"
             className="almez-section-sticky-bar__back"
-            onClick={() => router.push(`/sections/${section.id}`)}
+            onClick={() => router.push(`/${language}/sections/${section.id}`)}
           >
             <span aria-hidden="true">←</span>
             {t("common.back", "Volver")}
@@ -292,7 +316,7 @@ function CategoryPageContent() {
                     }}
                     onClick={() =>
                       router.push(
-                        `/sections/${section.id}/categories/${category.id}/items/${item.id}`,
+                        `/${language}/sections/${section.id}/categories/${category.id}/items/${item.id}`,
                       )
                     }
                     onKeyDown={(event) => {
@@ -383,57 +407,6 @@ function CategoryPageContent() {
   );
 }
 
-export default function CategoryPage() {
-  const { t } = useTranslation();
-
-  return (
-    <Suspense
-      fallback={
-        <main className="almez-section-page">
-          <div
-            className="almez-section-page__container almez-loading"
-            role="status"
-            aria-live="polite"
-            aria-busy="true"
-          >
-            <div className="almez-loading__intro">
-              <span className="almez-loading__icon" aria-hidden="true">
-                <span className="almez-loading__spinner" />
-              </span>
-
-              <h1 className="almez-loading__title">
-                {t(
-                  "sections.loadingCategoryTitle",
-                  "Estamos preparando esta categoría",
-                )}
-              </h1>
-
-              <p className="almez-loading__description">
-                {t(
-                  "sections.loadingCategory",
-                  "Cargando los elementos de esta categoría...",
-                )}
-              </p>
-            </div>
-
-            <div className="almez-loading__grid" aria-hidden="true">
-              {[1, 2, 3, 4].map((item) => (
-                <div className="almez-loading__card" key={item}>
-                  <div className="almez-loading__image" />
-                  <div className="almez-loading__body">
-                    <div className="almez-loading__line almez-loading__line--title" />
-                    <div className="almez-loading__line" />
-                    <div className="almez-loading__line almez-loading__line--short" />
-                    <div className="almez-loading__action" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </main>
-      }
-    >
-      <CategoryPageContent />
-    </Suspense>
-  );
+export default function CategoryPage(props: CategoryPageProps) {
+  return <CategoryPageContent {...props} />;
 }

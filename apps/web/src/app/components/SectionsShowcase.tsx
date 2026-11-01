@@ -93,6 +93,7 @@ export default function SectionsShowcase() {
   const language =
     i18n.resolvedLanguage?.split("-")[0] || i18n.language.split("-")[0];
 
+  const localizedPath = (path: string) => `/${language}${path}`;
   return (
     <section id="sections" className="almez-sections">
       <div className="almez-sections__container">
@@ -165,7 +166,9 @@ export default function SectionsShowcase() {
                   key={section.id}
                   type="button"
                   className="almez-category-card almez-section-showcase-card"
-                  onClick={() => router.push(`/sections/${section.id}`)}
+                  onClick={() =>
+                    router.push(localizedPath(`/sections/${section.id}`))
+                  }
                   aria-label={`${title} — ${t(
                     "sections.viewSection",
                     "View section",

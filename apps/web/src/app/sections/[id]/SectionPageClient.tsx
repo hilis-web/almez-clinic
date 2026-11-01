@@ -56,7 +56,7 @@ function getLocalizedText(
 }
 
 export default function SectionPageClient() {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ id: string; locale?: string }>();
   const router = useRouter();
   const { t, i18n } = useTranslation();
 
@@ -70,7 +70,9 @@ export default function SectionPageClient() {
   const sectionId = params.id;
 
   const language =
-    i18n.resolvedLanguage?.split("-")[0] || i18n.language.split("-")[0];
+    params.locale === "en" || params.locale === "es"
+      ? params.locale
+      : i18n.resolvedLanguage?.split("-")[0] || "es";
 
   useEffect(() => {
     if (!sectionId) return;
@@ -184,7 +186,7 @@ export default function SectionPageClient() {
           <button
             type="button"
             className="almez-section-page__back"
-            onClick={() => router.push("/")}
+            onClick={() => router.push(`/${language}`)}
           >
             {t("sections.backHome", "Back to home")}
           </button>
@@ -204,7 +206,7 @@ export default function SectionPageClient() {
           <button
             type="button"
             className="almez-section-sticky-bar__back"
-            onClick={() => router.push("/")}
+            onClick={() => router.push(`/${language}`)}
           >
             <span aria-hidden="true">←</span>
             {t("common.back", "Volver")}
@@ -273,7 +275,7 @@ export default function SectionPageClient() {
                     }}
                     onClick={() =>
                       router.push(
-                        `/sections/${section.id}/categories/${category.id}`,
+                        `/${language}/sections/${section.id}/categories/${category.id}`,
                       )
                     }
                     onKeyDown={(event) => {
@@ -285,7 +287,7 @@ export default function SectionPageClient() {
                         event.preventDefault();
 
                         router.push(
-                          `/sections/${section.id}/categories/${category.id}`,
+                          `/${language}/sections/${section.id}/categories/${category.id}`,
                         );
                       }
                     }}
@@ -336,7 +338,7 @@ export default function SectionPageClient() {
                           {visibleItems.map((item) => (
                             <li key={item.id}>
                               <a
-                                href={`/sections/${section.id}/categories/${category.id}/items/${item.id}`}
+                                href={`/${language}/sections/${section.id}/categories/${category.id}/items/${item.id}`}
                                 className="almez-category-card__dropdown-link"
                                 tabIndex={isHovered ? 0 : -1}
                                 onClick={(event) => event.stopPropagation()}
@@ -356,7 +358,7 @@ export default function SectionPageClient() {
                       )}
 
                       <a
-                        href={`/sections/${section.id}/categories/${category.id}`}
+                        href={`/${language}/sections/${section.id}/categories/${category.id}`}
                         className="almez-category-card__dropdown-all"
                         tabIndex={isHovered ? 0 : -1}
                         onClick={(event) => event.stopPropagation()}

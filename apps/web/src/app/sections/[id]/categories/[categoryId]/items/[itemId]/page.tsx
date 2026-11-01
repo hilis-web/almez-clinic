@@ -51,6 +51,7 @@ function ItemPageContent() {
     id: string;
     categoryId: string;
     itemId: string;
+    locale?: string;
   }>();
 
   const router = useRouter();
@@ -66,9 +67,10 @@ function ItemPageContent() {
   const categoryId = params.categoryId;
   const itemId = params.itemId;
 
-  const language = (i18n.resolvedLanguage || i18n.language || "es").split(
-    "-",
-  )[0];
+  const language =
+    params.locale === "en" || params.locale === "es"
+      ? params.locale
+      : (i18n.resolvedLanguage || i18n.language || "es").split("-")[0];
 
   useEffect(() => {
     if (!sectionId || !categoryId || !itemId) return;
@@ -167,7 +169,7 @@ function ItemPageContent() {
             type="button"
             onClick={() =>
               router.push(
-                `/sections/${encodeURIComponent(sectionId)}/categories/${encodeURIComponent(categoryId)}`,
+                `/${language}/sections/${encodeURIComponent(sectionId)}/categories/${encodeURIComponent(categoryId)}`,
               )
             }
             className="almez-section-sticky-bar__back"

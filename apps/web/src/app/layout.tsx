@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 
 import RecaptchaProvider from "./components/RecaptchaProvider";
@@ -18,10 +19,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://almez-clinic.vercel.app/"),
+
   title: {
     default: "Almez | Medical Care",
     template: "%s | Almez",
   },
+
   description:
     "Discover Almez medical services, explore our medical sections, and request a consultation with our team.",
   applicationName: "Almez",
@@ -45,18 +49,20 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body>
-        <I18nProvider>
-          <SiteHeader />
+        <Suspense fallback={<div aria-busy="true" />}>
+          <I18nProvider>
+            <SiteHeader />
 
-          <RecaptchaProvider>{children}</RecaptchaProvider>
+            <RecaptchaProvider>{children}</RecaptchaProvider>
 
-          <SiteFooter />
-          <CookieConsent />
-        </I18nProvider>
+            <SiteFooter />
+            <CookieConsent />
+          </I18nProvider>
+        </Suspense>
       </body>
     </html>
   );
