@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
+type Locale = "es" | "en";
+
 type LocalizedText = {
-  ar?: string;
-  en?: string;
   es?: string;
+  en?: string;
 };
 
 interface SectionItem {
@@ -36,9 +37,14 @@ interface Section {
   categories: SectionCategory[];
 }
 
+interface SectionPageClientProps {
+  initialSection: Section;
+  locale: Locale;
+}
+
 function getLocalizedText(
   value: LocalizedText | string | null | undefined,
-  language: string,
+  language: Locale,
 ): string {
   if (!value) return "";
 
@@ -46,154 +52,22 @@ function getLocalizedText(
     return value;
   }
 
-  return (
-    value[language as keyof LocalizedText] ||
-    value.es ||
-    value.en ||
-    value.ar ||
-    ""
-  );
+  return value[language] || value.es || value.en || "";
 }
 
-export default function SectionPageClient() {
-  const params = useParams<{ id: string; locale?: string }>();
+export default function SectionPageClient({
+  initialSection,
+  locale,
+}: SectionPageClientProps) {
   const router = useRouter();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
-  const [section, setSection] = useState<Section | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [hoveredCategoryId, setHoveredCategoryId] = useState<string | null>(
     null,
   );
 
-  const sectionId = params.id;
-
-  const language =
-    params.locale === "en" || params.locale === "es"
-      ? params.locale
-      : i18n.resolvedLanguage?.split("-")[0] || "es";
-
-  useEffect(() => {
-    if (!sectionId) return;
-
-    let cancelled = false;
-
-    async function loadSection() {
-      try {
-        setLoading(true);
-        setError(false);
-
-        const apiUrl =
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-        const response = await fetch(
-          `${apiUrl}/api/sections/${encodeURIComponent(sectionId)}`,
-        );
-
-        if (response.status === 404) {
-          if (!cancelled) {
-            setSection(null);
-          }
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error("Failed to load section");
-        }
-
-        const result = await response.json();
-
-        if (!result.success || !result.data) {
-          throw new Error("Invalid section response");
-        }
-
-        if (!cancelled) {
-          setSection(result.data as Section);
-        }
-      } catch (err) {
-        console.error("Failed to load section:", err);
-
-        if (!cancelled) {
-          setError(true);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    void loadSection();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [sectionId]);
-
-  if (loading) {
-    return (
-      <main className="almez-section-page">
-        <div
-          className="almez-section-page__container almez-loading"
-          role="status"
-          aria-live="polite"
-          aria-busy="true"
-        >
-          <div className="almez-loading__intro">
-            <span className="almez-loading__icon" aria-hidden="true">
-              <span className="almez-loading__spinner" />
-            </span>
-
-            <h1 className="almez-loading__title">
-              {t("sections.loadingTitle", "Estamos preparando el contenido")}
-            </h1>
-
-            <p className="almez-loading__description">
-              {t("sections.loading", "Cargando categorías y elementos...")}
-            </p>
-          </div>
-
-          <div className="almez-loading__grid" aria-hidden="true">
-            {[1, 2, 3, 4].map((item) => (
-              <div className="almez-loading__card" key={item}>
-                <div className="almez-loading__image" />
-
-                <div className="almez-loading__body">
-                  <div className="almez-loading__line almez-loading__line--title" />
-                  <div className="almez-loading__line" />
-                  <div className="almez-loading__line almez-loading__line--short" />
-                  <div className="almez-loading__action" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  if (error || !section) {
-    return (
-      <main className="almez-section-page">
-        <div className="almez-section-page__container">
-          <p role="alert">
-            {error
-              ? t("sections.error", "We couldn't load the section.")
-              : t("sections.notFound", "Section not found.")}
-          </p>
-
-          <button
-            type="button"
-            className="almez-section-page__back"
-            onClick={() => router.push(`/${language}`)}
-          >
-            {t("sections.backHome", "Back to home")}
-          </button>
-        </div>
-      </main>
-    );
-  }
+  const section = initialSection;
+  const language = locale;
 
   const title = getLocalizedText(section.title, language);
   const description = getLocalizedText(section.description, language);

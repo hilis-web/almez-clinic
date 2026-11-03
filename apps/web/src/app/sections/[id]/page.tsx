@@ -1,18 +1,13 @@
-import { Suspense } from "react";
-import SectionPageClient from "./SectionPageClient";
+import { redirect } from "next/navigation";
 
-export default function SectionPage() {
-  return (
-    <Suspense
-      fallback={
-        <main className="almez-section-page">
-          <div className="almez-section-page__container">
-            <p role="status">Loading section...</p>
-          </div>
-        </main>
-      }
-    >
-      <SectionPageClient />
-    </Suspense>
-  );
+interface SectionPageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default async function SectionPage({ params }: SectionPageProps) {
+  const { id } = await params;
+
+  redirect(`/es/sections/${id}`);
 }

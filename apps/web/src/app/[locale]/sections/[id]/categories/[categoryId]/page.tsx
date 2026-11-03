@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
+
 import CategoryPage from "../../../../../sections/[id]/categories/[categoryId]/page";
+
+import { getPublishedCategory, getLocalizedText } from "@/lib/server/sections";
 
 type Locale = "es" | "en";
 
@@ -14,101 +17,13 @@ interface CategoryRouteProps {
   }>;
 }
 
-type LocalizedText = {
-  ar?: string;
-  en?: string;
-  es?: string;
-};
+async function getCachedCategory(sectionId: string, categoryId: string) {
+  "use cache";
 
-type ContentStatus = "PUBLISHED" | "UNPUBLISHED";
-
-interface SectionItem {
-  id: string;
-  title: LocalizedText | string;
-  description?: LocalizedText | string | null;
-  imageUrl?: string | null;
-  status?: ContentStatus;
-  sortOrder: number;
-}
-
-interface Category {
-  id: string;
-  title: LocalizedText | string;
-  description?: LocalizedText | string | null;
-  imageUrl?: string | null;
-  status?: ContentStatus;
-  sortOrder: number;
-  items: SectionItem[];
-}
-
-interface Section {
-  id: string;
-  title: LocalizedText | string;
-  description?: LocalizedText | string | null;
-  imageUrl?: string | null;
-  categories: Category[];
-}
-
-function getLocalizedText(
-  value: LocalizedText | string | null | undefined,
-  locale: Locale,
-): string {
-  if (!value) return "";
-
-  if (typeof value === "string") return value;
-
-  return value[locale] || value.es || value.en || value.ar || "";
-}
-
-async function getCategory(
-  id: string,
-  categoryId: string,
-): Promise<Category | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-    const response = await fetch(
-      `${apiUrl}/api/sections/${encodeURIComponent(id)}`,
-      {
-        next: { revalidate: 3600 },
-      },
-    );
-
-    if (!response.ok) return null;
-
-    const result = await response.json();
-
-    if (!result.success || !result.data) return null;
-
-    const section = result.data as Section;
-
-    return (
-      section.categories?.find((category) => category.id === categoryId) ?? null
-    );
-  } catch {
-    return null;
-  }
-}
-
-async function getSection(id: string): Promise<Section | null> {
-  try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-    const response = await fetch(
-      `${apiUrl}/api/sections/${encodeURIComponent(id)}`,
-      {
-        next: { revalidate: 3600 },
-      },
-    );
-
-    if (!response.ok) return null;
-
-    const result = await response.json();
-
-    if (!result.success || !result.data) return null;
-
-    return result.data as Section;
-  } catch {
+    return await getPublishedCategory(sectionId, categoryId);
+  } catch (error) {
+    console.error("Failed to load category:", error);
     return null;
   }
 }
@@ -118,13 +33,19 @@ export async function generateMetadata({
 }: CategoryRouteProps): Promise<Metadata> {
   const { locale, id, categoryId } = await params;
 
-  if (locale !== "es" && locale !== "en") return {};
+  if (locale !== "es" && locale !== "en") {
+    return {};
+  }
 
   const language = locale as Locale;
 
-  const category = await getCategory(id, categoryId);
+  const result = await getCachedCategory(id, categoryId);
 
-  if (!category) return {};
+  if (!result) {
+    return {};
+  }
+
+  const { category } = result;
 
   const title = getLocalizedText(category.title, language);
   const description = getLocalizedText(category.description, language);
@@ -146,6 +67,7 @@ export async function generateMetadata({
   return {
     title: pageTitle,
     description: pageDescription,
+
     alternates: {
       canonical: url,
       languages: {
@@ -153,6 +75,7 @@ export async function generateMetadata({
         en: `/en/sections/${id}/categories/${categoryId}`,
       },
     },
+
     openGraph: {
       title: pageTitle,
       description: pageDescription,
@@ -163,10 +86,12 @@ export async function generateMetadata({
     },
   };
 }
+
 async function ConnectionMarker() {
   await connection();
   return null;
 }
+
 async function CategoryPageContent({ params }: CategoryRouteProps) {
   const { locale, id, categoryId } = await params;
 
@@ -174,21 +99,17 @@ async function CategoryPageContent({ params }: CategoryRouteProps) {
     notFound();
   }
 
-  const section = await getSection(id);
+  const result = await getCachedCategory(id, categoryId);
 
-  if (!section) {
+  if (!result) {
     notFound();
   }
 
-  const category =
-    section.categories?.find((item) => item.id === categoryId) ?? null;
-
-  if (!category) {
-    notFound();
-  }
+  const { section, category } = result;
 
   return <CategoryPage initialSection={section} initialCategory={category} />;
 }
+
 export default function LocalizedCategoryPage({ params }: CategoryRouteProps) {
   return (
     <>

@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
+
 import SectionPageClient from "../../../sections/[id]/SectionPageClient";
+import {
+  getPublishedSection,
+  getLocalizedText,
+  type Section,
+} from "@/lib/server/sections";
 
 type Locale = "es" | "en";
 
@@ -13,56 +19,14 @@ interface SectionPageProps {
   }>;
 }
 
-type LocalizedText = {
-  es?: string;
-  en?: string;
-};
-
-interface Section {
-  id: string;
-  title: LocalizedText | string;
-  description: LocalizedText | string;
-  status?: string;
-}
-
-function getLocalizedText(
-  value: LocalizedText | string | null | undefined,
-  locale: Locale,
-): string {
-  if (!value) return "";
-
-  if (typeof value === "string") return value;
-
-  return value[locale] || value.es || value.en || "";
-}
-
-async function getSection(id: string): Promise<Section | null> {
-  try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-    const response = await fetch(
-      `${apiUrl}/api/sections/${encodeURIComponent(id)}`,
-      {
-        next: { revalidate: 3600 },
-      },
-    );
-
-    if (!response.ok) return null;
-
-    const result = await response.json();
-
-    if (!result.success || !result.data) return null;
-
-    return result.data as Section;
-  } catch {
-    return null;
-  }
-}
-
 async function getCachedSection(id: string): Promise<Section | null> {
   "use cache";
 
-  return getSection(id);
+  try {
+    return await getPublishedSection(id);
+  } catch {
+    return null;
+  }
 }
 
 export async function generateMetadata({
@@ -76,6 +40,7 @@ export async function generateMetadata({
 
   const language = locale as Locale;
   const section = await getCachedSection(id);
+
   if (!section) return {};
 
   const title = getLocalizedText(section.title, language);
@@ -119,13 +84,19 @@ async function ConnectionMarker() {
 }
 
 async function SectionPageContent({ params }: SectionPageProps) {
-  const { locale } = await params;
+  const { locale, id } = await params;
 
   if (locale !== "es" && locale !== "en") {
     notFound();
   }
 
-  return <SectionPageClient />;
+  const section = await getPublishedSection(id);
+
+  if (!section) {
+    notFound();
+  }
+
+  return <SectionPageClient initialSection={section} locale={locale} />;
 }
 
 export default function SectionPage({ params }: SectionPageProps) {

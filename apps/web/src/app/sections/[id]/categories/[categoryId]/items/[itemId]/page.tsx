@@ -1,327 +1,70 @@
-"use client";
+import { notFound } from "next/navigation";
 
-import { Suspense, useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useTranslation } from "react-i18next";
-import i18n from "../../../../../../../i18n/config";
+import ItemPageClient from "./ItemPageClient";
 
-type LocalizedText = {
-  ar?: string;
-  en?: string;
-  es?: string;
-};
+import {
+  getPublishedSection,
+  getPublishedSectionItem,
+} from "@/lib/server/sections";
 
-interface SectionItem {
-  id: string;
-  title: LocalizedText | string;
-  description?: LocalizedText | string | null;
-  content: LocalizedText | string;
-  imageUrl?: string | null;
-}
-
-interface SectionCategory {
-  id: string;
-  title: LocalizedText | string;
-}
-
-interface Section {
-  id: string;
-  title: LocalizedText | string;
-  categories: SectionCategory[];
-}
-
-function getLocalizedText(
-  value: LocalizedText | string | null | undefined,
-  language: string,
-): string {
-  if (typeof value === "string") return value;
-  if (!value) return "";
-
-  return (
-    value[language as keyof LocalizedText] ||
-    value.es ||
-    value.en ||
-    value.ar ||
-    ""
-  );
-}
-
-function ItemPageContent() {
-  const params = useParams<{
+interface ItemRouteProps {
+  params: Promise<{
     id: string;
     categoryId: string;
     itemId: string;
-    locale?: string;
-  }>();
-
-  const router = useRouter();
-  const { t } = useTranslation("common");
-
-  const [item, setItem] = useState<SectionItem | null>(null);
-  const [section, setSection] = useState<Section | null>(null);
-  const [category, setCategory] = useState<SectionCategory | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  const sectionId = params.id;
-  const categoryId = params.categoryId;
-  const itemId = params.itemId;
-
-  const language =
-    params.locale === "en" || params.locale === "es"
-      ? params.locale
-      : (i18n.resolvedLanguage || i18n.language || "es").split("-")[0];
-
-  useEffect(() => {
-    if (!sectionId || !categoryId || !itemId) return;
-
-    let cancelled = false;
-
-    async function loadItemPage() {
-      try {
-        setLoading(true);
-        setError(false);
-
-        const apiUrl =
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-        const encodedSectionId = encodeURIComponent(sectionId);
-        const encodedCategoryId = encodeURIComponent(categoryId);
-        const encodedItemId = encodeURIComponent(itemId);
-
-        const [itemResponse, sectionResponse] = await Promise.all([
-          fetch(
-            `${apiUrl}/api/sections/${encodedSectionId}/categories/${encodedCategoryId}/items/${encodedItemId}`,
-          ),
-          fetch(`${apiUrl}/api/sections/${encodedSectionId}`),
-        ]);
-
-        if (itemResponse.status === 404 || sectionResponse.status === 404) {
-          if (!cancelled) {
-            setItem(null);
-            setSection(null);
-            setCategory(null);
-          }
-          return;
-        }
-
-        if (!itemResponse.ok || !sectionResponse.ok) {
-          throw new Error("Failed to load item page");
-        }
-
-        const [itemResult, sectionResult] = await Promise.all([
-          itemResponse.json(),
-          sectionResponse.json(),
-        ]);
-
-        if (
-          !itemResult.success ||
-          !itemResult.data ||
-          !sectionResult.success ||
-          !sectionResult.data
-        ) {
-          throw new Error("Invalid API response");
-        }
-
-        const foundSection = sectionResult.data as Section;
-
-        const foundCategory =
-          foundSection.categories?.find((entry) => entry.id === categoryId) ??
-          null;
-
-        if (!cancelled) {
-          setItem(itemResult.data as SectionItem);
-          setSection(foundSection);
-          setCategory(foundCategory);
-        }
-      } catch (err) {
-        console.error("Failed to load item page:", err);
-
-        if (!cancelled) {
-          setError(true);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    void loadItemPage();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [sectionId, categoryId, itemId]);
-
-  const sectionTitle = getLocalizedText(section?.title, language);
-  const categoryTitle = getLocalizedText(category?.title, language);
-  const title = getLocalizedText(item?.title, language);
-  const description = getLocalizedText(item?.description, language);
-  const content = getLocalizedText(item?.content, language);
-
-  return (
-    <main className="almez-section-page">
-      {/* Sticky section and category bar */}
-      <div className="almez-section-sticky-bar">
-        <div className="almez-section-sticky-bar__inner">
-          <button
-            type="button"
-            onClick={() =>
-              router.push(
-                `/${language}/sections/${encodeURIComponent(sectionId)}/categories/${encodeURIComponent(categoryId)}`,
-              )
-            }
-            className="almez-section-sticky-bar__back"
-          >
-            <span aria-hidden="true">←</span>
-            {t("common.back", "Volver")}
-          </button>
-
-          <div className="almez-section-sticky-bar__text">
-            <div className="almez-section-sticky-bar__eyebrow">
-              {sectionTitle}
-              {sectionTitle && categoryTitle && " / "}
-              {categoryTitle}
-            </div>
-
-            {title && (
-              <h1 className="almez-section-sticky-bar__title">{title}</h1>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="almez-section-page__container">
-        {loading ? (
-          <div
-            className="almez-loading"
-            role="status"
-            aria-live="polite"
-            aria-busy="true"
-          >
-            <div className="almez-loading__intro">
-              <span className="almez-loading__icon" aria-hidden="true">
-                <span className="almez-loading__spinner" />
-              </span>
-
-              <h2 className="almez-loading__title">
-                {t(
-                  "sections.loadingItemTitle",
-                  "Estamos preparando el contenido",
-                )}
-              </h2>
-
-              <p className="almez-loading__description">
-                {t(
-                  "sections.loadingItem",
-                  "Cargando los detalles del elemento...",
-                )}
-              </p>
-            </div>
-
-            <div className="almez-loading__grid" aria-hidden="true">
-              {[1, 2].map((placeholder) => (
-                <div className="almez-loading__card" key={placeholder}>
-                  <div className="almez-loading__image" />
-
-                  <div className="almez-loading__body">
-                    <div className="almez-loading__line almez-loading__line--title" />
-                    <div className="almez-loading__line" />
-                    <div className="almez-loading__line almez-loading__line--short" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : error ? (
-          <p role="alert">
-            {t("common.error", "No se pudo cargar el contenido.")}
-          </p>
-        ) : !item ? (
-          <p role="status">
-            {t("common.notFound", "Contenido no encontrado.")}
-          </p>
-        ) : (
-          <article className="almez-item-detail">
-            {/*
-              Para mostrar la imagen, título y descripción del elemento,
-              puedes activar estos bloques si los necesitas.
-            */}
-
-            {/*
-            {item.imageUrl && (
-              <img
-                src={item.imageUrl}
-                alt={title}
-                className="almez-item-detail__image"
-              />
-            )}
-
-            <h2 className="almez-item-detail__title">{title}</h2>
-
-            {description && (
-              <p className="almez-item-detail__description">
-                {description}
-              </p>
-            )}
-            */}
-
-            <div
-              className="almez-item-detail__content"
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
-          </article>
-        )}
-      </div>
-    </main>
-  );
+  }>;
 }
 
-export default function ItemPage() {
-  const { t } = useTranslation("common");
+async function getCachedItemPageData(
+  sectionId: string,
+  categoryId: string,
+  itemId: string,
+) {
+  "use cache";
+
+  try {
+    const [item, section] = await Promise.all([
+      getPublishedSectionItem(sectionId, categoryId, itemId),
+      getPublishedSection(sectionId),
+    ]);
+
+    if (!item || !section) {
+      return null;
+    }
+
+    const category =
+      section.categories?.find((entry) => entry.id === categoryId) ?? null;
+
+    if (!category) {
+      return null;
+    }
+
+    return {
+      item,
+      section,
+      category,
+    };
+  } catch (error) {
+    console.error("Failed to load item page data:", error);
+    return null;
+  }
+}
+
+export default async function ItemPage({ params }: ItemRouteProps) {
+  const { id, categoryId, itemId } = await params;
+
+  const data = await getCachedItemPageData(id, categoryId, itemId);
+
+  if (!data) {
+    notFound();
+  }
+
   return (
-    <Suspense
-      fallback={
-        <main className="almez-section-page">
-          <div className="almez-section-page__container almez-loading">
-            <div className="almez-loading__intro">
-              <span className="almez-loading__icon" aria-hidden="true">
-                <span className="almez-loading__spinner" />
-              </span>
-
-              <h2 className="almez-loading__title">
-                {t(
-                  "sections.loadingItemTitle",
-                  "Estamos preparando el contenido",
-                )}
-              </h2>
-
-              <p className="almez-loading__description">
-                {t(
-                  "sections.loadingItem",
-                  "Cargando los detalles del elemento...",
-                )}
-              </p>
-            </div>
-
-            <div className="almez-loading__grid" aria-hidden="true">
-              {[1, 2].map((placeholder) => (
-                <div className="almez-loading__card" key={placeholder}>
-                  <div className="almez-loading__image" />
-                  <div className="almez-loading__body">
-                    <div className="almez-loading__line almez-loading__line--title" />
-                    <div className="almez-loading__line" />
-                    <div className="almez-loading__line almez-loading__line--short" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </main>
-      }
-    >
-      <ItemPageContent />
-    </Suspense>
+    <ItemPageClient
+      initialItem={data.item}
+      initialSection={data.section}
+      initialCategory={data.category}
+      locale="es"
+    />
   );
 }
