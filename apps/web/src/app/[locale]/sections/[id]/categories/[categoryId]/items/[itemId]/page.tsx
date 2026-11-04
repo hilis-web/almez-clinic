@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { connection } from "next/server";
+import SectionContentLoading from "@/app/components/SectionContentLoading";
 
 import ItemPageClient from "../../../../../../../sections/[id]/categories/[categoryId]/items/[itemId]/ItemPageClient";
 
@@ -137,6 +138,7 @@ async function ItemPageContent({ params }: ItemRouteProps) {
   if (locale !== "es" && locale !== "en") {
     notFound();
   }
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   const data = await getCachedItemPageData(id, categoryId, itemId);
 
@@ -157,7 +159,7 @@ async function ItemPageContent({ params }: ItemRouteProps) {
 export default function LocalizedItemPage({ params }: ItemRouteProps) {
   return (
     <>
-      <Suspense fallback={null}>
+      <Suspense fallback={<SectionContentLoading type="section" />}>
         <ItemPageContent params={params} />
       </Suspense>
 

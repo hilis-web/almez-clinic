@@ -36,43 +36,54 @@ export default function ItemPageClient({
   locale,
 }: ItemPageProps) {
   const sectionTitle = getText(initialSection.title, locale);
-
   const categoryTitle = getText(initialCategory.title, locale);
-
   const itemTitle = getText(initialItem.title, locale);
-
   const content = getText(initialItem.content, locale);
 
   return (
-    <main className="almez-item-detail">
-      <div className="almez-item-detail__sticky">
-        <div className="almez-item-detail__breadcrumb">
-          <Link href={`/${locale}/sections/${initialSection.id}`}>
-            {sectionTitle}
-          </Link>
-
-          <span aria-hidden="true">/</span>
-
+    <main className="almez-section-page">
+      <div className="almez-section-sticky-bar">
+        <div className="almez-section-sticky-bar__inner">
           <Link
             href={`/${locale}/sections/${initialSection.id}/categories/${initialCategory.id}`}
+            className="almez-section-sticky-bar__back"
           >
-            {categoryTitle}
+            <span aria-hidden="true">←</span>
+            {locale === "es" ? "Volver" : "Back"}
           </Link>
 
-          <span aria-hidden="true">/</span>
+          <div className="almez-section-sticky-bar__text">
+            <div className="almez-section-sticky-bar__eyebrow">
+              <Link href={`/${locale}/sections/${initialSection.id}`}>
+                {sectionTitle}
+              </Link>
 
-          <span>{itemTitle}</span>
+              {sectionTitle && categoryTitle && " / "}
+
+              <Link
+                href={`/${locale}/sections/${initialSection.id}/categories/${initialCategory.id}`}
+              >
+                {categoryTitle}
+              </Link>
+            </div>
+
+            {itemTitle && (
+              <h1 className="almez-section-sticky-bar__title">{itemTitle}</h1>
+            )}
+          </div>
         </div>
       </div>
 
-      <article className="almez-item-detail__article">
-        <div
-          className="almez-item-detail__content"
-          dangerouslySetInnerHTML={{
-            __html: content,
-          }}
-        />
-      </article>
+      <div className="almez-section-page__container">
+        <article className="almez-item-detail">
+          <div
+            className="almez-item-detail__content"
+            dangerouslySetInnerHTML={{
+              __html: content,
+            }}
+          />
+        </article>
+      </div>
     </main>
   );
 }

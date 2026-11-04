@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
-
+import SectionContentLoading from "@/app/components/SectionContentLoading";
 import SectionPageClient from "../../../sections/[id]/SectionPageClient";
 import {
   getPublishedSection,
@@ -90,6 +90,7 @@ async function SectionPageContent({ params }: SectionPageProps) {
     notFound();
   }
 
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   const section = await getPublishedSection(id);
 
   if (!section) {
@@ -102,15 +103,7 @@ async function SectionPageContent({ params }: SectionPageProps) {
 export default function SectionPage({ params }: SectionPageProps) {
   return (
     <>
-      <Suspense
-        fallback={
-          <main className="almez-section-page">
-            <div className="almez-section-page__container">
-              <p role="status">Loading section...</p>
-            </div>
-          </main>
-        }
-      >
+      <Suspense fallback={<SectionContentLoading type="section" />}>
         <SectionPageContent params={params} />
       </Suspense>
 
